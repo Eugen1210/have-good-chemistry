@@ -508,6 +508,9 @@ function renderVote(){
 
 function selectChoice(choice){
   lastActorName=players[currentPlayerIndex]||"参加者";
+
+  runRareLottery();
+
   currentSelections.push(choice);
   remainingChoices=remainingChoices.filter(item=>item!==choice);
   currentRank++;
@@ -516,6 +519,12 @@ function selectChoice(choice){
     finishPlayerVote();
     return;
   }
+
+  renderVote();
+}
+
+  renderVote();
+}
   renderVote();
 }
 
@@ -621,9 +630,34 @@ function copyResult(){
 
 /* タイトルタップ・レア演出 */
 function titleTap(){
-  if(isPageVisible("createPage") || isPageVisible("minePage") || isPageVisible("configLockPage") || isPageVisible("configPage")){
+  if(isPageVisible("topPage")){
+    openMinesweeper();
+  }
+}
+
+function runRareLottery(){
+  const rareAllowed = currentTheme ? currentTheme.rareEnabled !== false : true;
+  if(!rareAllowed) return;
+
+  if(Math.floor(Math.random()*16384)===0){
+    showGodFreeze(lastActorName);
     return;
   }
+
+  rareCountdown--;
+  localStorage.setItem("rareCountdown",String(rareCountdown));
+  updateLamp();
+
+  if(rareCountdown<=0){
+    showSuperRare();
+    resetRareCountdown();
+    updateLamp();
+  }
+}
+
+  // それ以外はマインスイーパー
+  openMinesweeper();
+}
 
   const rareAllowed = currentTheme ? currentTheme.rareEnabled !== false : true;
   if(!rareAllowed)return;
