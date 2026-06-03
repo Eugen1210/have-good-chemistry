@@ -3,10 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
+
 <title>have good chemistry</title>
+
 <style>
 *{box-sizing:border-box}
 body{
@@ -15,133 +17,118 @@ body{
   background:linear-gradient(180deg,#fff0f7,#edf8ff);
   color:#4a3a3a;
 }
-.app{
-  max-width:430px;
-  margin:0 auto;
-  min-height:100vh;
-  padding:18px;
-}
+.app{max-width:430px;margin:0 auto;min-height:100vh;padding:18px}
 h1,h2,h3{text-align:center}
 h1{
-  font-size:30px;
-  color:#ff6fae;
-  line-height:1.1;
-  cursor:pointer;
-  user-select:none;
+  font-size:30px;color:#ff6fae;line-height:1.1;
+  cursor:pointer;user-select:none;
 }
 .card{
-  background:#fff;
-  border-radius:24px;
-  padding:18px;
-  margin:14px 0;
+  background:#fff;border-radius:24px;padding:18px;margin:14px 0;
   box-shadow:0 8px 20px rgba(255,120,170,.18);
 }
 button{
-  width:100%;
-  border:none;
-  border-radius:18px;
-  padding:15px;
-  margin:8px 0;
-  font-size:17px;
-  font-weight:bold;
-  background:#ff9ac8;
-  color:#fff;
-  cursor:pointer;
+  width:100%;border:none;border-radius:18px;padding:15px;margin:8px 0;
+  font-size:17px;font-weight:bold;background:#ff9ac8;color:#fff;cursor:pointer;
 }
 button:active{transform:scale(.98)}
-.sub{background:#8fc7ff}
-.gray{background:#aaa}
-.danger{background:#ff7777}
-.edit{background:#b99cff}
+.sub{background:#8fc7ff}.gray{background:#aaa}.danger{background:#ff7777}.edit{background:#b99cff}
 input,select{
-  width:100%;
-  padding:13px;
-  margin:7px 0;
-  border-radius:14px;
-  border:2px solid #ffd1e5;
-  font-size:16px;
+  width:100%;padding:13px;margin:7px 0;border-radius:14px;
+  border:2px solid #ffd1e5;font-size:16px;
 }
 .hidden{display:none}
-.small{
-  font-size:13px;
-  color:#777;
-  text-align:center;
-}
-.row{
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
-.row input{flex:1}
-.scoreInput{max-width:72px;text-align:center}
+.small{font-size:13px;color:#777;text-align:center}
+.row{display:flex;gap:8px;align-items:center}
+.row input{flex:1}.scoreInput{max-width:72px;text-align:center}
 .choice-btn{
-  background:#fff5fb;
-  color:#4a3a3a;
-  border:2px solid #ffaad1;
-  text-align:left;
+  background:#fff5fb;color:#4a3a3a;border:2px solid #ffaad1;text-align:left;
 }
 .rank-item{
-  background:#fff5fb;
-  border-radius:16px;
-  padding:12px;
-  margin:8px 0;
+  background:#fff5fb;border-radius:16px;padding:12px;margin:8px 0;
   border:2px solid #ffd1e5;
 }
-.result-rank{
-  font-size:18px;
-  font-weight:bold;
+.result-rank{font-size:18px;font-weight:bold}
+.top1{color:#f0a000}.top2{color:#888}.top3{color:#b87333}
+.tabs{display:flex;gap:8px}.tabs button{font-size:14px;padding:12px 6px}
+
+/* HGC CHANCEランプ */
+.hgc-lamp{
+  position:fixed;right:14px;bottom:18px;z-index:8000;
+  width:82px;height:82px;border-radius:50%;
+  background:radial-gradient(circle,#fff7a8,#ffd700,#ff8c00);
+  border:3px solid rgba(255,255,255,.8);
+  box-shadow:0 0 18px rgba(255,215,0,.75);
+  opacity:.42;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;font-weight:900;font-size:13px;color:#5c3000;
+  animation:lampPulse 1.1s infinite;
+  pointer-events:none;
 }
-.top1{color:#f0a000}
-.top2{color:#888}
-.top3{color:#b87333}
-.tabs{
-  display:flex;
-  gap:8px;
+@keyframes lampPulse{
+  0%,100%{transform:scale(1);opacity:.35}
+  50%{transform:scale(1.08);opacity:.62}
 }
-.tabs button{
-  font-size:14px;
-  padding:12px 6px;
+
+/* SUPER RARE */
+.rare-overlay{
+  position:fixed;inset:0;z-index:9999;background:#000;
+  display:flex;align-items:center;justify-content:center;
 }
-.mine-board{
-  display:grid;
-  gap:4px;
-  justify-content:center;
-  margin:12px auto;
+.rare-img{
+  width:100%;height:100%;object-fit:cover;
 }
+.rare-close{
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  width:82%;max-width:330px;background:rgba(255,154,200,.9);
+}
+
+/* GOD風 */
+.freeze-overlay{
+  position:fixed;inset:0;z-index:10000;background:#000;
+  display:flex;align-items:center;justify-content:center;
+  color:#d6a300;text-align:center;padding:22px;
+}
+.freeze-dots{
+  font-size:42px;font-weight:900;color:#d6a300;
+}
+.freeze-text{
+  font-size:42px;font-weight:900;line-height:1.35;
+  color:#d6a300;
+  text-shadow:0 0 10px rgba(255,215,0,.5),0 0 24px rgba(255,215,0,.35);
+  animation:goldAppear .5s ease;
+}
+@keyframes goldAppear{
+  from{opacity:0;transform:scale(.92)}
+  to{opacity:1;transform:scale(1)}
+}
+
+/* マインスイーパー */
+.mine-board{display:grid;gap:4px;justify-content:center;margin:12px auto}
 .cell{
-  width:34px;
-  height:34px;
-  border-radius:8px;
-  border:none;
-  background:#ffd1e5;
-  color:#4a3a3a;
-  font-weight:bold;
-  font-size:16px;
-  padding:0;
-  margin:0;
+  width:34px;height:34px;border-radius:8px;border:none;background:#ffd1e5;
+  color:#4a3a3a;font-weight:bold;font-size:16px;padding:0;margin:0;
 }
-.cell.open{
-  background:#fff5fb;
-  border:1px solid #ffd1e5;
+.cell.open{background:#fff5fb;border:1px solid #ffd1e5}
+.cell.flag{background:#ffe08a}.cell.mine{background:#ff7777}
+
+.checkrow{
+  display:flex;align-items:center;gap:8px;margin:10px 0;
 }
-.cell.flag{
-  background:#ffe08a;
-}
-.cell.mine{
-  background:#ff7777;
-}
+.checkrow input{width:auto}
 </style>
 </head>
-<body>
 
+<body>
 <div class="app">
-  <h1 onclick="openMinesweeper()">have good<br>chemistry</h1>
+  <h1 onclick="titleTap()">have good<br>chemistry</h1>
 
   <div id="topPage" class="card">
     <h2>トップページ</h2>
     <button onclick="newTheme()">📝 お題を作る</button>
     <button onclick="openStartPage()">🎮 投票を始める</button>
     <button onclick="openThemeList()">📚 保存したお題を見る</button>
+    <button class="gray" onclick="openConfig()">⚙️ config</button>
   </div>
 
   <div id="createPage" class="card hidden">
@@ -158,6 +145,12 @@ input,select{
     <p class="small">標準は 1位から順に 5, 3, 1, 0, -1</p>
     <div id="scoreInputs"></div>
     <button class="sub" onclick="resetScores()">標準点数に戻す</button>
+
+    <h3>レア演出</h3>
+    <label class="checkrow">
+      <input type="checkbox" id="themeRareEnabled" checked>
+      このお題でレア演出を有効にする
+    </label>
 
     <button onclick="saveTheme()">保存する</button>
     <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
@@ -219,12 +212,41 @@ input,select{
     <button class="sub" onclick="startMine()">リスタート</button>
     <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
   </div>
+
+  <div id="configLockPage" class="card hidden">
+    <h2>⚙️ config</h2>
+    <input id="configPasswordInput" type="password" placeholder="password">
+    <button onclick="unlockConfig()">解除</button>
+    <button class="gray" onclick="showPage('topPage')">戻る</button>
+  </div>
+
+  <div id="configPage" class="card hidden">
+    <h2>⚙️ config</h2>
+
+    <h3>レア演出確認</h3>
+    <button onclick="showSuperRare()">SUPER RARE確認</button>
+    <button onclick="showGodFreeze('テスト参加者')">GOD風確認</button>
+    <button class="sub" onclick="testLamp()">HGCランプ確認</button>
+
+    <h3>パスワード変更</h3>
+    <input id="pass1Input" placeholder="パスワード1">
+    <input id="pass2Input" placeholder="パスワード2">
+    <button onclick="savePasswords()">パスワードを保存</button>
+
+    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+  </div>
 </div>
+
+<div id="lamp" class="hgc-lamp hidden">HGC<br>CHANCE</div>
 
 <script>
 let themes=JSON.parse(localStorage.getItem("rankingThemes")||"[]");
-let editingId=null;
+let config=JSON.parse(localStorage.getItem("hgcConfig")||"null")||{
+  pass1:"0721",
+  pass2:"hgc"
+};
 
+let editingId=null;
 let currentTheme=null;
 let players=[];
 let currentPlayerIndex=0;
@@ -233,24 +255,29 @@ let remainingChoices=[];
 let currentSelections=[];
 let allVotes=[];
 let lastRanking=[];
+let lastActorName="参加者";
+
+let rareCountdown=Number(localStorage.getItem("rareCountdown")||"0");
+if(!rareCountdown) resetRareCountdown();
 
 const defaultScores=[5,3,1,0,-1];
 
 function showPage(pageId){
-  ["topPage","createPage","themeListPage","startPage","votePage","resultPage","minePage"].forEach(id=>{
+  ["topPage","createPage","themeListPage","startPage","votePage","resultPage","minePage","configLockPage","configPage"].forEach(id=>{
     document.getElementById(id).classList.add("hidden");
   });
   document.getElementById(pageId).classList.remove("hidden");
+  updateLamp();
 }
 
-function saveStorage(){
-  localStorage.setItem("rankingThemes",JSON.stringify(themes));
-}
+function saveStorage(){localStorage.setItem("rankingThemes",JSON.stringify(themes))}
+function saveConfig(){localStorage.setItem("hgcConfig",JSON.stringify(config))}
 
 function newTheme(){
   editingId=null;
   document.getElementById("createTitle").textContent="📝 お題作成";
   document.getElementById("themeTitle").value="";
+  document.getElementById("themeRareEnabled").checked=true;
   initChoices();
   initScores();
   showPage("createPage");
@@ -285,7 +312,6 @@ function addChoiceInput(value=""){
 function initScores(scores=defaultScores){
   const box=document.getElementById("scoreInputs");
   box.innerHTML="";
-
   for(let i=0;i<5;i++){
     const wrap=document.createElement("div");
     wrap.className="row";
@@ -309,17 +335,13 @@ function initScores(scores=defaultScores){
     box.appendChild(wrap);
   }
 }
-
-function resetScores(){
-  initScores(defaultScores);
-}
+function resetScores(){initScores(defaultScores)}
 
 function getChoicesFromForm(){
   return Array.from(document.querySelectorAll("#choiceInputs input"))
     .map(input=>input.value.trim())
     .filter(text=>text!=="");
 }
-
 function getScoresFromForm(){
   return Array.from(document.querySelectorAll("#scoreInputs input"))
     .map(input=>Number(input.value));
@@ -329,22 +351,23 @@ function saveTheme(){
   const title=document.getElementById("themeTitle").value.trim();
   const choices=getChoicesFromForm();
   const scores=getScoresFromForm();
+  const rareEnabled=document.getElementById("themeRareEnabled").checked;
 
-  if(!title){alert("お題名を入力してね");return;}
-  if(choices.length<5){alert("候補は最低5個入れてね");return;}
-  if(scores.some(score=>Number.isNaN(score))){alert("点数は数字で入力してね");return;}
+  if(!title){alert("お題名を入力してね");return}
+  if(choices.length<5){alert("候補は最低5個入れてね");return}
+  if(scores.some(score=>Number.isNaN(score))){alert("点数は数字で入力してね");return}
 
   if(editingId){
     const theme=themes.find(t=>t.id===editingId);
     theme.title=title;
     theme.choices=choices;
     theme.scores=scores;
+    theme.rareEnabled=rareEnabled;
     alert("編集を保存したよ！");
   }else{
-    themes.push({id:Date.now(),title,choices,scores});
+    themes.push({id:Date.now(),title,choices,scores,rareEnabled});
     alert("保存したよ！");
   }
-
   saveStorage();
   editingId=null;
   showPage("topPage");
@@ -353,25 +376,23 @@ function saveTheme(){
 function openThemeList(){
   const box=document.getElementById("themeList");
   box.innerHTML="";
-
-  if(themes.length===0){
-    box.innerHTML="<p class='small'>まだお題がありません</p>";
-  }
+  if(themes.length===0) box.innerHTML="<p class='small'>まだお題がありません</p>";
 
   themes.forEach(theme=>{
     const scores=theme.scores||defaultScores;
+    const rareText=theme.rareEnabled===false ? "OFF" : "ON";
     const div=document.createElement("div");
     div.className="rank-item";
     div.innerHTML=`
       <strong>${theme.title}</strong>
       <p class="small">${theme.choices.join(" / ")}</p>
       <p class="small">点数：${scores.join(", ")}</p>
+      <p class="small">レア演出：${rareText}</p>
       <button class="edit" onclick="editTheme(${theme.id})">編集する</button>
       <button class="danger" onclick="deleteTheme(${theme.id})">削除</button>
     `;
     box.appendChild(div);
   });
-
   showPage("themeListPage");
 }
 
@@ -382,11 +403,10 @@ function editTheme(id){
   editingId=id;
   document.getElementById("createTitle").textContent="✏️ お題編集";
   document.getElementById("themeTitle").value=theme.title;
-
   document.getElementById("choiceInputs").innerHTML="";
   theme.choices.forEach(choice=>addChoiceInput(choice));
-
   initScores(theme.scores||defaultScores);
+  document.getElementById("themeRareEnabled").checked=theme.rareEnabled!==false;
   showPage("createPage");
 }
 
@@ -422,7 +442,6 @@ function makePlayerInputs(){
   const count=Number(document.getElementById("playerCount").value);
   const box=document.getElementById("playerInputs");
   box.innerHTML="";
-
   for(let i=0;i<count;i++){
     const input=document.createElement("input");
     input.placeholder=`${i+1}人目の名前`;
@@ -438,10 +457,11 @@ function startVote(){
     .map(input=>input.value.trim())
     .filter(name=>name!=="");
 
-  if(players.length===0){alert("参加者名を入れてね");return;}
+  if(players.length===0){alert("参加者名を入れてね");return}
 
   currentPlayerIndex=0;
   allVotes=[];
+  lastActorName=players[0]||"参加者";
   startPlayerVote();
 }
 
@@ -449,6 +469,7 @@ function startPlayerVote(){
   currentRank=1;
   remainingChoices=[...currentTheme.choices];
   currentSelections=[];
+  lastActorName=players[currentPlayerIndex]||"参加者";
 
   document.getElementById("voteThemeTitle").textContent=`お題：${currentTheme.title}`;
   document.getElementById("votePlayerName").textContent=`👤 ${players[currentPlayerIndex]} さんの番`;
@@ -462,7 +483,6 @@ function renderVote(){
 
   const choiceBox=document.getElementById("voteChoices");
   choiceBox.innerHTML="";
-
   remainingChoices.forEach(choice=>{
     const btn=document.createElement("button");
     btn.className="choice-btn";
@@ -473,7 +493,6 @@ function renderVote(){
 
   const selectedBox=document.getElementById("selectedList");
   selectedBox.innerHTML="";
-
   currentSelections.forEach((choice,index)=>{
     const div=document.createElement("div");
     div.className="rank-item";
@@ -483,6 +502,7 @@ function renderVote(){
 }
 
 function selectChoice(choice){
+  lastActorName=players[currentPlayerIndex]||"参加者";
   currentSelections.push(choice);
   remainingChoices=remainingChoices.filter(item=>item!==choice);
   currentRank++;
@@ -491,7 +511,6 @@ function selectChoice(choice){
     finishPlayerVote();
     return;
   }
-
   renderVote();
 }
 
@@ -501,6 +520,7 @@ function finishPlayerVote(){
     selections:currentSelections
   });
 
+  lastActorName=players[currentPlayerIndex]||"参加者";
   currentPlayerIndex++;
 
   if(currentPlayerIndex>=players.length){
@@ -516,7 +536,6 @@ function showResult(){
   const scoreRule=currentTheme.scores||defaultScores;
 
   currentTheme.choices.forEach(choice=>scores[choice]=0);
-
   allVotes.forEach(vote=>{
     vote.selections.forEach((choice,index)=>{
       scores[choice]+=scoreRule[index]??0;
@@ -524,7 +543,6 @@ function showResult(){
   });
 
   lastRanking=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
-
   renderTotalResult();
   renderPersonalResult();
   showResultTab("total");
@@ -541,9 +559,9 @@ function renderTotalResult(){
 
     let medal=`${index+1}位`;
     let cls="";
-    if(index===0){medal="🥇";cls="top1";}
-    if(index===1){medal="🥈";cls="top2";}
-    if(index===2){medal="🥉";cls="top3";}
+    if(index===0){medal="🥇";cls="top1"}
+    if(index===1){medal="🥈";cls="top2"}
+    if(index===2){medal="🥉";cls="top3"}
 
     div.innerHTML=`
       <div class="result-rank ${cls}">${medal} ${choice}</div>
@@ -578,7 +596,6 @@ function showResultTab(type){
 
 function copyResult(){
   let text=`【${currentTheme.title} 結果】\n\n`;
-
   text+="■総合ランキング\n";
   lastRanking.forEach(([choice,score],index)=>{
     text+=`${index+1}位：${choice} ${score}点\n`;
@@ -595,6 +612,136 @@ function copyResult(){
   navigator.clipboard.writeText(text)
     .then(()=>alert("結果をコピーしたよ！"))
     .catch(()=>alert("コピーできませんでした"));
+}
+
+/* タイトルタップ・レア演出 */
+function titleTap(){
+  if(isPageVisible("createPage") || isPageVisible("minePage") || isPageVisible("configLockPage") || isPageVisible("configPage")){
+    return;
+  }
+
+  const rareAllowed = currentTheme ? currentTheme.rareEnabled !== false : true;
+  if(!rareAllowed)return;
+
+  const duringVoteOrResult = isPageVisible("votePage") || isPageVisible("resultPage");
+
+  if(duringVoteOrResult && Math.floor(Math.random()*16384)===0){
+    showGodFreeze(lastActorName);
+    return;
+  }
+
+  rareCountdown--;
+  localStorage.setItem("rareCountdown",String(rareCountdown));
+  updateLamp();
+
+  if(rareCountdown<=0){
+    showSuperRare();
+    resetRareCountdown();
+    updateLamp();
+  }
+}
+
+function resetRareCountdown(){
+  rareCountdown=Math.floor(Math.random()*100)+1;
+  localStorage.setItem("rareCountdown",String(rareCountdown));
+}
+
+function updateLamp(){
+  const lamp=document.getElementById("lamp");
+  const rareAllowed = currentTheme ? currentTheme.rareEnabled !== false : true;
+
+  if(
+    rareAllowed &&
+    rareCountdown<=5 &&
+    rareCountdown>=1 &&
+    !isPageVisible("createPage") &&
+    !isPageVisible("minePage") &&
+    !isPageVisible("configLockPage") &&
+    !isPageVisible("configPage")
+  ){
+    lamp.classList.remove("hidden");
+  }else{
+    lamp.classList.add("hidden");
+  }
+}
+
+function testLamp(){
+  const lamp=document.getElementById("lamp");
+  lamp.classList.remove("hidden");
+  setTimeout(()=>lamp.classList.add("hidden"),3000);
+}
+
+function showSuperRare(){
+  const overlay=document.createElement("div");
+  overlay.className="rare-overlay";
+  overlay.innerHTML=`
+    <img class="rare-img" src="super_rare.png" alt="SUPER RARE">
+    <button class="rare-close" onclick="this.closest('.rare-overlay').remove()">タップした！</button>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function showGodFreeze(name){
+  const overlay=document.createElement("div");
+  overlay.className="freeze-overlay";
+  overlay.innerHTML=`<div class="freeze-dots">・・・</div>`;
+  document.body.appendChild(overlay);
+
+  setTimeout(()=>{overlay.innerHTML=`<div class="freeze-dots">・・・・・・</div>`},800);
+
+  setTimeout(()=>{
+    overlay.innerHTML=`
+      <div>
+        <div class="freeze-text">${escapeHtml(name)}から<br>飲んでください</div>
+        <button style="margin-top:30px" onclick="this.closest('.freeze-overlay').remove()">乾杯！</button>
+      </div>
+    `;
+  },1700);
+}
+
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function isPageVisible(id){
+  return !document.getElementById(id).classList.contains("hidden");
+}
+
+/* config */
+function openConfig(){
+  document.getElementById("configPasswordInput").value="";
+  showPage("configLockPage");
+}
+
+function unlockConfig(){
+  const pass=document.getElementById("configPasswordInput").value;
+  if(pass===config.pass1 || pass===config.pass2){
+    document.getElementById("pass1Input").value=config.pass1;
+    document.getElementById("pass2Input").value=config.pass2;
+    showPage("configPage");
+  }else{
+    alert("解除できません");
+  }
+}
+
+function savePasswords(){
+  const p1=document.getElementById("pass1Input").value.trim();
+  const p2=document.getElementById("pass2Input").value.trim();
+
+  if(!p1 || !p2){
+    alert("パスワードは2つとも入力してね");
+    return;
+  }
+
+  config.pass1=p1;
+  config.pass2=p2;
+  saveConfig();
+  alert("パスワードを保存したよ");
 }
 
 /* マインスイーパー */
@@ -620,12 +767,7 @@ function startMine(){
   }
 
   for(let i=0;i<total;i++){
-    mineCells.push({
-      mine:mines.has(i),
-      open:false,
-      flag:false,
-      count:0
-    });
+    mineCells.push({mine:mines.has(i),open:false,flag:false,count:0});
   }
 
   for(let i=0;i<total;i++){
@@ -684,14 +826,8 @@ function renderMine(){
     btn.onmousedown=()=>pressTimer=setTimeout(()=>toggleFlag(index),500);
     btn.onmouseup=()=>clearTimeout(pressTimer);
     btn.onmouseleave=()=>clearTimeout(pressTimer);
-
-    btn.ontouchstart=()=>{
-      pressTimer=setTimeout(()=>toggleFlag(index),500);
-    };
-    btn.ontouchend=()=>{
-      clearTimeout(pressTimer);
-    };
-
+    btn.ontouchstart=()=>{pressTimer=setTimeout(()=>toggleFlag(index),500)};
+    btn.ontouchend=()=>{clearTimeout(pressTimer)};
     btn.onclick=()=>openCell(index);
 
     board.appendChild(btn);
@@ -713,7 +849,7 @@ function openCell(index){
 
   if(cell.mine){
     mineGameOver=true;
-    mineCells.forEach(c=>{if(c.mine)c.open=true;});
+    mineCells.forEach(c=>{if(c.mine)c.open=true});
     renderMine();
     setTimeout(()=>alert("ゲームオーバー！"),100);
     return;
@@ -739,7 +875,7 @@ function checkMineClear(){
 
 initChoices();
 initScores();
+updateLamp();
 </script>
-
 </body>
 </html>
