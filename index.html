@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>have good chemistry</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Hiragino Sans","Yu Gothic",sans-serif;
+  background:linear-gradient(180deg,#fff0f7,#edf8ff);
+  color:#4a3a3a;
+}
+.app{
+  max-width:430px;
+  margin:0 auto;
+  min-height:100vh;
+  padding:18px;
+}
+h1,h2,h3{text-align:center}
+h1{
+  font-size:30px;
+  color:#ff6fae;
+  line-height:1.1;
+  cursor:pointer;
+  user-select:none;
+}
+.card{
+  background:#fff;
+  border-radius:24px;
+  padding:18px;
+  margin:14px 0;
+  box-shadow:0 8px 20px rgba(255,120,170,.18);
+}
+button{
+  width:100%;
+  border:none;
+  border-radius:18px;
+  padding:15px;
+  margin:8px 0;
+  font-size:17px;
+  font-weight:bold;
+  background:#ff9ac8;
+  color:#fff;
+  cursor:pointer;
+}
+button:active{transform:scale(.98)}
+.sub{background:#8fc7ff}
+.gray{background:#aaa}
+.danger{background:#ff7777}
+.edit{background:#b99cff}
+input,select{
+  width:100%;
+  padding:13px;
+  margin:7px 0;
+  border-radius:14px;
+  border:2px solid #ffd1e5;
+  font-size:16px;
+}
+.hidden{display:none}
+.small{
+  font-size:13px;
+  color:#777;
+  text-align:center;
+}
+.row{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.row input{flex:1}
+.scoreInput{max-width:72px;text-align:center}
+.choice-btn{
+  background:#fff5fb;
+  color:#4a3a3a;
+  border:2px solid #ffaad1;
+  text-align:left;
+}
+.rank-item{
+  background:#fff5fb;
+  border-radius:16px;
+  padding:12px;
+  margin:8px 0;
+  border:2px solid #ffd1e5;
+}
+.result-rank{
+  font-size:18px;
+  font-weight:bold;
+}
+.top1{color:#f0a000}
+.top2{color:#888}
+.top3{color:#b87333}
+.tabs{
+  display:flex;
+  gap:8px;
+}
+.tabs button{
+  font-size:14px;
+  padding:12px 6px;
+}
+.mine-board{
+  display:grid;
+  gap:4px;
+  justify-content:center;
+  margin:12px auto;
+}
+.cell{
+  width:34px;
+  height:34px;
+  border-radius:8px;
+  border:none;
+  background:#ffd1e5;
+  color:#4a3a3a;
+  font-weight:bold;
+  font-size:16px;
+  padding:0;
+  margin:0;
+}
+.cell.open{
+  background:#fff5fb;
+  border:1px solid #ffd1e5;
+}
+.cell.flag{
+  background:#ffe08a;
+}
+.cell.mine{
+  background:#ff7777;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <h1 onclick="openMinesweeper()">have good<br>chemistry</h1>
+
+  <div id="topPage" class="card">
+    <h2>トップページ</h2>
+    <button onclick="newTheme()">📝 お題を作る</button>
+    <button onclick="openStartPage()">🎮 投票を始める</button>
+    <button onclick="openThemeList()">📚 保存したお題を見る</button>
+  </div>
+
+  <div id="createPage" class="card hidden">
+    <h2 id="createTitle">📝 お題作成</h2>
+
+    <label>お題名</label>
+    <input id="themeTitle" placeholder="例：好きなラーメン">
+
+    <h3>ランキング候補</h3>
+    <div id="choiceInputs"></div>
+    <button class="sub" onclick="addChoiceInput()">＋ 候補を追加</button>
+
+    <h3>点数配分</h3>
+    <p class="small">標準は 1位から順に 5, 3, 1, 0, -1</p>
+    <div id="scoreInputs"></div>
+    <button class="sub" onclick="resetScores()">標準点数に戻す</button>
+
+    <button onclick="saveTheme()">保存する</button>
+    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+  </div>
+
+  <div id="themeListPage" class="card hidden">
+    <h2>📚 保存したお題</h2>
+    <div id="themeList"></div>
+    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+  </div>
+
+  <div id="startPage" class="card hidden">
+    <h2>🎮 投票準備</h2>
+
+    <label>お題を選ぶ</label>
+    <select id="themeSelect"></select>
+
+    <label>参加人数</label>
+    <input id="playerCount" type="number" min="1" max="20" value="3" onchange="makePlayerInputs()">
+
+    <h3>参加者名</h3>
+    <div id="playerInputs"></div>
+
+    <button onclick="startVote()">投票スタート</button>
+    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+  </div>
+
+  <div id="votePage" class="card hidden">
+    <h2 id="voteThemeTitle"></h2>
+    <h3 id="votePlayerName"></h3>
+    <p id="voteRankText" class="small"></p>
+    <div id="voteChoices"></div>
+
+    <h3>選んだ順番</h3>
+    <div id="selectedList"></div>
+  </div>
+
+  <div id="resultPage" class="card hidden">
+    <h2>🏆 結果発表</h2>
+
+    <div class="tabs">
+      <button onclick="showResultTab('total')">総合結果</button>
+      <button class="sub" onclick="showResultTab('personal')">個人回答</button>
+    </div>
+
+    <div id="totalResultBox"></div>
+    <div id="personalResultBox" class="hidden"></div>
+
+    <button onclick="copyResult()">結果をコピー</button>
+    <button class="sub" onclick="openStartPage()">もう一度遊ぶ</button>
+    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+  </div>
+
+  <div id="minePage" class="card hidden">
+    <h2>💣 ミニマインスイーパー</h2>
+    <p class="small">タップで開く。長押しで旗🚩</p>
+    <p class="small" id="mineInfo"></p>
+    <div id="mineBoard" class="mine-board"></div>
+    <button class="sub" onclick="startMine()">リスタート</button>
+    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+  </div>
+</div>
+
+<script>
+let themes=JSON.parse(localStorage.getItem("rankingThemes")||"[]");
+let editingId=null;
+
+let currentTheme=null;
+let players=[];
+let currentPlayerIndex=0;
+let currentRank=1;
+let remainingChoices=[];
+let currentSelections=[];
+let allVotes=[];
+let lastRanking=[];
+
+const defaultScores=[5,3,1,0,-1];
+
+function showPage(pageId){
+  ["topPage","createPage","themeListPage","startPage","votePage","resultPage","minePage"].forEach(id=>{
+    document.getElementById(id).classList.add("hidden");
+  });
+  document.getElementById(pageId).classList.remove("hidden");
+}
+
+function saveStorage(){
+  localStorage.setItem("rankingThemes",JSON.stringify(themes));
+}
+
+function newTheme(){
+  editingId=null;
+  document.getElementById("createTitle").textContent="📝 お題作成";
+  document.getElementById("themeTitle").value="";
+  initChoices();
+  initScores();
+  showPage("createPage");
+}
+
+function initChoices(){
+  const box=document.getElementById("choiceInputs");
+  box.innerHTML="";
+  for(let i=0;i<5;i++) addChoiceInput();
+}
+
+function addChoiceInput(value=""){
+  const box=document.getElementById("choiceInputs");
+  const wrap=document.createElement("div");
+  wrap.className="row";
+
+  const input=document.createElement("input");
+  input.placeholder="例：味噌ラーメン";
+  input.value=value;
+
+  const del=document.createElement("button");
+  del.textContent="×";
+  del.className="danger";
+  del.style.width="54px";
+  del.onclick=()=>wrap.remove();
+
+  wrap.appendChild(input);
+  wrap.appendChild(del);
+  box.appendChild(wrap);
+}
+
+function initScores(scores=defaultScores){
+  const box=document.getElementById("scoreInputs");
+  box.innerHTML="";
+
+  for(let i=0;i<5;i++){
+    const wrap=document.createElement("div");
+    wrap.className="row";
+
+    const label=document.createElement("div");
+    label.textContent=`${i+1}位`;
+    label.style.width="60px";
+
+    const input=document.createElement("input");
+    input.type="number";
+    input.className="scoreInput";
+    input.value=scores[i]??0;
+
+    const text=document.createElement("div");
+    text.textContent="点";
+    text.style.width="30px";
+
+    wrap.appendChild(label);
+    wrap.appendChild(input);
+    wrap.appendChild(text);
+    box.appendChild(wrap);
+  }
+}
+
+function resetScores(){
+  initScores(defaultScores);
+}
+
+function getChoicesFromForm(){
+  return Array.from(document.querySelectorAll("#choiceInputs input"))
+    .map(input=>input.value.trim())
+    .filter(text=>text!=="");
+}
+
+function getScoresFromForm(){
+  return Array.from(document.querySelectorAll("#scoreInputs input"))
+    .map(input=>Number(input.value));
+}
+
+function saveTheme(){
+  const title=document.getElementById("themeTitle").value.trim();
+  const choices=getChoicesFromForm();
+  const scores=getScoresFromForm();
+
+  if(!title){alert("お題名を入力してね");return;}
+  if(choices.length<5){alert("候補は最低5個入れてね");return;}
+  if(scores.some(score=>Number.isNaN(score))){alert("点数は数字で入力してね");return;}
+
+  if(editingId){
+    const theme=themes.find(t=>t.id===editingId);
+    theme.title=title;
+    theme.choices=choices;
+    theme.scores=scores;
+    alert("編集を保存したよ！");
+  }else{
+    themes.push({id:Date.now(),title,choices,scores});
+    alert("保存したよ！");
+  }
+
+  saveStorage();
+  editingId=null;
+  showPage("topPage");
+}
+
+function openThemeList(){
+  const box=document.getElementById("themeList");
+  box.innerHTML="";
+
+  if(themes.length===0){
+    box.innerHTML="<p class='small'>まだお題がありません</p>";
+  }
+
+  themes.forEach(theme=>{
+    const scores=theme.scores||defaultScores;
+    const div=document.createElement("div");
+    div.className="rank-item";
+    div.innerHTML=`
+      <strong>${theme.title}</strong>
+      <p class="small">${theme.choices.join(" / ")}</p>
+      <p class="small">点数：${scores.join(", ")}</p>
+      <button class="edit" onclick="editTheme(${theme.id})">編集する</button>
+      <button class="danger" onclick="deleteTheme(${theme.id})">削除</button>
+    `;
+    box.appendChild(div);
+  });
+
+  showPage("themeListPage");
+}
+
+function editTheme(id){
+  const theme=themes.find(t=>t.id===id);
+  if(!theme)return;
+
+  editingId=id;
+  document.getElementById("createTitle").textContent="✏️ お題編集";
+  document.getElementById("themeTitle").value=theme.title;
+
+  document.getElementById("choiceInputs").innerHTML="";
+  theme.choices.forEach(choice=>addChoiceInput(choice));
+
+  initScores(theme.scores||defaultScores);
+  showPage("createPage");
+}
+
+function deleteTheme(id){
+  if(!confirm("このお題を削除する？"))return;
+  themes=themes.filter(theme=>theme.id!==id);
+  saveStorage();
+  openThemeList();
+}
+
+function openStartPage(){
+  const select=document.getElementById("themeSelect");
+  select.innerHTML="";
+
+  if(themes.length===0){
+    alert("先にお題を作ってね");
+    newTheme();
+    return;
+  }
+
+  themes.forEach(theme=>{
+    const option=document.createElement("option");
+    option.value=theme.id;
+    option.textContent=theme.title;
+    select.appendChild(option);
+  });
+
+  makePlayerInputs();
+  showPage("startPage");
+}
+
+function makePlayerInputs(){
+  const count=Number(document.getElementById("playerCount").value);
+  const box=document.getElementById("playerInputs");
+  box.innerHTML="";
+
+  for(let i=0;i<count;i++){
+    const input=document.createElement("input");
+    input.placeholder=`${i+1}人目の名前`;
+    box.appendChild(input);
+  }
+}
+
+function startVote(){
+  const themeId=Number(document.getElementById("themeSelect").value);
+  currentTheme=themes.find(theme=>theme.id===themeId);
+
+  players=Array.from(document.querySelectorAll("#playerInputs input"))
+    .map(input=>input.value.trim())
+    .filter(name=>name!=="");
+
+  if(players.length===0){alert("参加者名を入れてね");return;}
+
+  currentPlayerIndex=0;
+  allVotes=[];
+  startPlayerVote();
+}
+
+function startPlayerVote(){
+  currentRank=1;
+  remainingChoices=[...currentTheme.choices];
+  currentSelections=[];
+
+  document.getElementById("voteThemeTitle").textContent=`お題：${currentTheme.title}`;
+  document.getElementById("votePlayerName").textContent=`👤 ${players[currentPlayerIndex]} さんの番`;
+
+  showPage("votePage");
+  renderVote();
+}
+
+function renderVote(){
+  document.getElementById("voteRankText").textContent=`${currentRank}位にしたいものを選んでね`;
+
+  const choiceBox=document.getElementById("voteChoices");
+  choiceBox.innerHTML="";
+
+  remainingChoices.forEach(choice=>{
+    const btn=document.createElement("button");
+    btn.className="choice-btn";
+    btn.textContent=choice;
+    btn.onclick=()=>selectChoice(choice);
+    choiceBox.appendChild(btn);
+  });
+
+  const selectedBox=document.getElementById("selectedList");
+  selectedBox.innerHTML="";
+
+  currentSelections.forEach((choice,index)=>{
+    const div=document.createElement("div");
+    div.className="rank-item";
+    div.textContent=`${index+1}位：${choice}`;
+    selectedBox.appendChild(div);
+  });
+}
+
+function selectChoice(choice){
+  currentSelections.push(choice);
+  remainingChoices=remainingChoices.filter(item=>item!==choice);
+  currentRank++;
+
+  if(currentSelections.length>=5 || remainingChoices.length===0){
+    finishPlayerVote();
+    return;
+  }
+
+  renderVote();
+}
+
+function finishPlayerVote(){
+  allVotes.push({
+    player:players[currentPlayerIndex],
+    selections:currentSelections
+  });
+
+  currentPlayerIndex++;
+
+  if(currentPlayerIndex>=players.length){
+    showResult();
+  }else{
+    alert(`次は ${players[currentPlayerIndex]} さんの番です`);
+    startPlayerVote();
+  }
+}
+
+function showResult(){
+  const scores={};
+  const scoreRule=currentTheme.scores||defaultScores;
+
+  currentTheme.choices.forEach(choice=>scores[choice]=0);
+
+  allVotes.forEach(vote=>{
+    vote.selections.forEach((choice,index)=>{
+      scores[choice]+=scoreRule[index]??0;
+    });
+  });
+
+  lastRanking=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+
+  renderTotalResult();
+  renderPersonalResult();
+  showResultTab("total");
+  showPage("resultPage");
+}
+
+function renderTotalResult(){
+  const box=document.getElementById("totalResultBox");
+  box.innerHTML="<h3>🏆 総合ランキング</h3>";
+
+  lastRanking.forEach(([choice,score],index)=>{
+    const div=document.createElement("div");
+    div.className="rank-item";
+
+    let medal=`${index+1}位`;
+    let cls="";
+    if(index===0){medal="🥇";cls="top1";}
+    if(index===1){medal="🥈";cls="top2";}
+    if(index===2){medal="🥉";cls="top3";}
+
+    div.innerHTML=`
+      <div class="result-rank ${cls}">${medal} ${choice}</div>
+      <div>${score}点</div>
+    `;
+    box.appendChild(div);
+  });
+}
+
+function renderPersonalResult(){
+  const box=document.getElementById("personalResultBox");
+  box.innerHTML="<h3>👥 みんなの回答</h3>";
+
+  allVotes.forEach(vote=>{
+    const div=document.createElement("div");
+    div.className="rank-item";
+
+    let html=`<strong>👤 ${vote.player}</strong>`;
+    vote.selections.forEach((choice,index)=>{
+      html+=`<p>${index+1}位：${choice}</p>`;
+    });
+
+    div.innerHTML=html;
+    box.appendChild(div);
+  });
+}
+
+function showResultTab(type){
+  document.getElementById("totalResultBox").classList.toggle("hidden",type!=="total");
+  document.getElementById("personalResultBox").classList.toggle("hidden",type!=="personal");
+}
+
+function copyResult(){
+  let text=`【${currentTheme.title} 結果】\n\n`;
+
+  text+="■総合ランキング\n";
+  lastRanking.forEach(([choice,score],index)=>{
+    text+=`${index+1}位：${choice} ${score}点\n`;
+  });
+
+  text+="\n■みんなの回答\n";
+  allVotes.forEach(vote=>{
+    text+=`\n${vote.player}\n`;
+    vote.selections.forEach((choice,index)=>{
+      text+=`${index+1}位：${choice}\n`;
+    });
+  });
+
+  navigator.clipboard.writeText(text)
+    .then(()=>alert("結果をコピーしたよ！"))
+    .catch(()=>alert("コピーできませんでした"));
+}
+
+/* マインスイーパー */
+let mineSize=8;
+let mineCount=10;
+let mineCells=[];
+let mineGameOver=false;
+let pressTimer=null;
+
+function openMinesweeper(){
+  startMine();
+  showPage("minePage");
+}
+
+function startMine(){
+  mineGameOver=false;
+  mineCells=[];
+  const total=mineSize*mineSize;
+  const mines=new Set();
+
+  while(mines.size<mineCount){
+    mines.add(Math.floor(Math.random()*total));
+  }
+
+  for(let i=0;i<total;i++){
+    mineCells.push({
+      mine:mines.has(i),
+      open:false,
+      flag:false,
+      count:0
+    });
+  }
+
+  for(let i=0;i<total;i++){
+    mineCells[i].count=countNearMines(i);
+  }
+
+  document.getElementById("mineInfo").textContent=`爆弾：${mineCount}個`;
+  renderMine();
+}
+
+function countNearMines(index){
+  const neighbors=getNeighbors(index);
+  return neighbors.filter(i=>mineCells[i] && mineCells[i].mine).length;
+}
+
+function getNeighbors(index){
+  const x=index%mineSize;
+  const y=Math.floor(index/mineSize);
+  const list=[];
+
+  for(let dy=-1;dy<=1;dy++){
+    for(let dx=-1;dx<=1;dx++){
+      if(dx===0 && dy===0)continue;
+      const nx=x+dx;
+      const ny=y+dy;
+      if(nx>=0 && nx<mineSize && ny>=0 && ny<mineSize){
+        list.push(ny*mineSize+nx);
+      }
+    }
+  }
+  return list;
+}
+
+function renderMine(){
+  const board=document.getElementById("mineBoard");
+  board.innerHTML="";
+  board.style.gridTemplateColumns=`repeat(${mineSize},34px)`;
+
+  mineCells.forEach((cell,index)=>{
+    const btn=document.createElement("button");
+    btn.className="cell";
+
+    if(cell.open){
+      btn.classList.add("open");
+      if(cell.mine){
+        btn.classList.add("mine");
+        btn.textContent="💣";
+      }else{
+        btn.textContent=cell.count>0 ? cell.count : "";
+      }
+    }else if(cell.flag){
+      btn.classList.add("flag");
+      btn.textContent="🚩";
+    }
+
+    btn.onmousedown=()=>pressTimer=setTimeout(()=>toggleFlag(index),500);
+    btn.onmouseup=()=>clearTimeout(pressTimer);
+    btn.onmouseleave=()=>clearTimeout(pressTimer);
+
+    btn.ontouchstart=()=>{
+      pressTimer=setTimeout(()=>toggleFlag(index),500);
+    };
+    btn.ontouchend=()=>{
+      clearTimeout(pressTimer);
+    };
+
+    btn.onclick=()=>openCell(index);
+
+    board.appendChild(btn);
+  });
+}
+
+function toggleFlag(index){
+  if(mineGameOver || mineCells[index].open)return;
+  mineCells[index].flag=!mineCells[index].flag;
+  renderMine();
+}
+
+function openCell(index){
+  if(mineGameOver)return;
+  const cell=mineCells[index];
+  if(cell.open || cell.flag)return;
+
+  cell.open=true;
+
+  if(cell.mine){
+    mineGameOver=true;
+    mineCells.forEach(c=>{if(c.mine)c.open=true;});
+    renderMine();
+    setTimeout(()=>alert("ゲームオーバー！"),100);
+    return;
+  }
+
+  if(cell.count===0){
+    getNeighbors(index).forEach(i=>{
+      if(!mineCells[i].open && !mineCells[i].flag) openCell(i);
+    });
+  }
+
+  renderMine();
+  checkMineClear();
+}
+
+function checkMineClear(){
+  const safeCells=mineCells.filter(c=>!c.mine);
+  if(safeCells.every(c=>c.open)){
+    mineGameOver=true;
+    setTimeout(()=>alert("クリア！"),100);
+  }
+}
+
+initChoices();
+initScores();
+</script>
+
+</body>
+</html>
