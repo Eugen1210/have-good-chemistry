@@ -19,10 +19,7 @@ body{
 }
 .app{max-width:430px;margin:0 auto;min-height:100vh;padding:18px}
 h1,h2,h3{text-align:center}
-h1{
-  font-size:30px;color:#ff6fae;line-height:1.1;
-  cursor:pointer;user-select:none;
-}
+h1{font-size:30px;color:#ff6fae;line-height:1.1;cursor:pointer;user-select:none}
 .card{
   background:#fff;border-radius:24px;padding:18px;margin:14px 0;
   box-shadow:0 8px 20px rgba(255,120,170,.18);
@@ -32,15 +29,19 @@ button{
   font-size:17px;font-weight:bold;background:#ff9ac8;color:#fff;cursor:pointer;
 }
 button:active{transform:scale(.98)}
-.sub{background:#8fc7ff}.gray{background:#aaa}.danger{background:#ff7777}.edit{background:#b99cff}
+.sub{background:#8fc7ff}
+.gray{background:#aaa}
+.danger{background:#ff7777}
+.edit{background:#b99cff}
 input,select{
   width:100%;padding:13px;margin:7px 0;border-radius:14px;
   border:2px solid #ffd1e5;font-size:16px;
 }
-.hidden{display:none}
+.hidden{display:none!important}
 .small{font-size:13px;color:#777;text-align:center}
 .row{display:flex;gap:8px;align-items:center}
-.row input{flex:1}.scoreInput{max-width:72px;text-align:center}
+.row input{flex:1}
+.scoreInput{max-width:72px;text-align:center}
 .choice-btn{
   background:#fff5fb;color:#4a3a3a;border:2px solid #ffaad1;text-align:left;
 }
@@ -51,8 +52,10 @@ input,select{
 .result-rank{font-size:18px;font-weight:bold}
 .top1{color:#f0a000}.top2{color:#888}.top3{color:#b87333}
 .tabs{display:flex;gap:8px}.tabs button{font-size:14px;padding:12px 6px}
+.checkrow{display:flex;align-items:center;gap:8px;margin:10px 0}
+.checkrow input{width:auto}
 
-/* HGC CHANCEランプ */
+/* GOGO CHANCE */
 #lamp{
   position:fixed;
   right:10px;
@@ -61,15 +64,10 @@ input,select{
   opacity:.6;
   pointer-events:none;
 }
-
 #lamp img{
   width:90px;
   height:auto;
   filter:drop-shadow(0 0 10px gold);
-}
-@keyframes lampPulse{
-  0%,100%{transform:scale(1);opacity:.35}
-  50%{transform:scale(1.08);opacity:.62}
 }
 
 /* SUPER RARE */
@@ -77,9 +75,7 @@ input,select{
   position:fixed;inset:0;z-index:9999;background:#000;
   display:flex;align-items:center;justify-content:center;
 }
-.rare-img{
-  width:100%;height:100%;object-fit:cover;
-}
+.rare-img{width:100%;height:100%;object-fit:cover}
 .rare-close{
   position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
   width:82%;max-width:330px;background:rgba(255,154,200,.9);
@@ -91,12 +87,8 @@ input,select{
   display:flex;align-items:center;justify-content:center;
   color:#d6a300;text-align:center;padding:22px;
 }
-.freeze-dots{
-  font-size:42px;font-weight:900;color:#d6a300;
-}
 .freeze-text{
-  font-size:42px;font-weight:900;line-height:1.35;
-  color:#d6a300;
+  font-size:42px;font-weight:900;line-height:1.35;color:#d6a300;
   text-shadow:0 0 10px rgba(255,215,0,.5),0 0 24px rgba(255,215,0,.35);
   animation:goldAppear .5s ease;
 }
@@ -112,12 +104,8 @@ input,select{
   color:#4a3a3a;font-weight:bold;font-size:16px;padding:0;margin:0;
 }
 .cell.open{background:#fff5fb;border:1px solid #ffd1e5}
-.cell.flag{background:#ffe08a}.cell.mine{background:#ff7777}
-
-.checkrow{
-  display:flex;align-items:center;gap:8px;margin:10px 0;
-}
-.checkrow input{width:auto}
+.cell.flag{background:#ffe08a}
+.cell.mine{background:#ff7777}
 </style>
 </head>
 
@@ -127,16 +115,14 @@ input,select{
 
   <div id="topPage" class="card">
     <h2>トップページ</h2>
-<button onclick="newTheme()">📝 お題を作る</button>
-<button onclick="openStartPage()">🎮 投票を始める</button>
-<button onclick="openThemeList()">📚 保存したお題を見る</button>
-<button class="sub" onclick="openMinesweeper()">💣 マインスイーパー</button>
-<button class="gray" onclick="openConfig()">⚙️ config</button>
+    <button onclick="newTheme()">📝 お題を作る</button>
+    <button onclick="openStartPage()">🎮 投票を始める</button>
+    <button onclick="openThemeList()">📚 保存したお題を見る</button>
+    <button class="gray" onclick="openConfig()">⚙️ config</button>
   </div>
 
   <div id="createPage" class="card hidden">
     <h2 id="createTitle">📝 お題作成</h2>
-
     <label>お題名</label>
     <input id="themeTitle" placeholder="例：好きなラーメン">
 
@@ -167,7 +153,6 @@ input,select{
 
   <div id="startPage" class="card hidden">
     <h2>🎮 投票準備</h2>
-
     <label>お題を選ぶ</label>
     <select id="themeSelect"></select>
 
@@ -193,15 +178,12 @@ input,select{
 
   <div id="resultPage" class="card hidden">
     <h2>🏆 結果発表</h2>
-
     <div class="tabs">
       <button onclick="showResultTab('total')">総合結果</button>
       <button class="sub" onclick="showResultTab('personal')">個人回答</button>
     </div>
-
     <div id="totalResultBox"></div>
     <div id="personalResultBox" class="hidden"></div>
-
     <button onclick="copyResult()">結果をコピー</button>
     <button class="sub" onclick="openStartPage()">もう一度遊ぶ</button>
     <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
@@ -229,7 +211,7 @@ input,select{
     <h3>レア演出確認</h3>
     <button onclick="showSuperRare()">SUPER RARE確認</button>
     <button onclick="showGodFreeze('テスト参加者')">GOD風確認</button>
-    <button class="sub" onclick="testLamp()">HGCランプ確認</button>
+    <button class="sub" onclick="testLamp()">GOGO CHANCE確認</button>
 
     <h3>パスワード変更</h3>
     <input id="pass1Input" placeholder="パスワード1">
@@ -241,15 +223,12 @@ input,select{
 </div>
 
 <div id="lamp" class="hidden">
-  <img id="lampImg" src="gogo_chance.png">
+  <img id="lampImg" src="gogo_chance.png" alt="GOGO CHANCE">
 </div>
 
 <script>
 let themes=JSON.parse(localStorage.getItem("rankingThemes")||"[]");
-let config=JSON.parse(localStorage.getItem("hgcConfig")||"null")||{
-  pass1:"0721",
-  pass2:"hgc"
-};
+let config=JSON.parse(localStorage.getItem("hgcConfig")||"null")||{pass1:"0721",pass2:"hgc"};
 
 let editingId=null;
 let currentTheme=null;
@@ -263,7 +242,7 @@ let lastRanking=[];
 let lastActorName="参加者";
 
 let rareCountdown=Number(localStorage.getItem("rareCountdown")||"0");
-if(!rareCountdown) resetRareCountdown();
+if(!rareCountdown || rareCountdown<1) resetRareCountdown();
 
 const defaultScores=[5,3,1,0,-1];
 
@@ -275,9 +254,25 @@ function showPage(pageId){
   updateLamp();
 }
 
-function saveStorage(){localStorage.setItem("rankingThemes",JSON.stringify(themes))}
-function saveConfig(){localStorage.setItem("hgcConfig",JSON.stringify(config))}
+function isPageVisible(id){
+  return !document.getElementById(id).classList.contains("hidden");
+}
 
+function saveStorage(){
+  localStorage.setItem("rankingThemes",JSON.stringify(themes));
+}
+function saveConfig(){
+  localStorage.setItem("hgcConfig",JSON.stringify(config));
+}
+
+/* タイトルはトップページでだけマインスイーパー */
+function titleTap(){
+  if(isPageVisible("topPage")){
+    openMinesweeper();
+  }
+}
+
+/* お題作成 */
 function newTheme(){
   editingId=null;
   document.getElementById("createTitle").textContent="📝 お題作成";
@@ -340,13 +335,17 @@ function initScores(scores=defaultScores){
     box.appendChild(wrap);
   }
 }
-function resetScores(){initScores(defaultScores)}
+
+function resetScores(){
+  initScores(defaultScores);
+}
 
 function getChoicesFromForm(){
   return Array.from(document.querySelectorAll("#choiceInputs input"))
     .map(input=>input.value.trim())
     .filter(text=>text!=="");
 }
+
 function getScoresFromForm(){
   return Array.from(document.querySelectorAll("#scoreInputs input"))
     .map(input=>Number(input.value));
@@ -373,15 +372,20 @@ function saveTheme(){
     themes.push({id:Date.now(),title,choices,scores,rareEnabled});
     alert("保存したよ！");
   }
+
   saveStorage();
   editingId=null;
   showPage("topPage");
 }
 
+/* お題一覧 */
 function openThemeList(){
   const box=document.getElementById("themeList");
   box.innerHTML="";
-  if(themes.length===0) box.innerHTML="<p class='small'>まだお題がありません</p>";
+
+  if(themes.length===0){
+    box.innerHTML="<p class='small'>まだお題がありません</p>";
+  }
 
   themes.forEach(theme=>{
     const scores=theme.scores||defaultScores;
@@ -389,8 +393,8 @@ function openThemeList(){
     const div=document.createElement("div");
     div.className="rank-item";
     div.innerHTML=`
-      <strong>${theme.title}</strong>
-      <p class="small">${theme.choices.join(" / ")}</p>
+      <strong>${escapeHtml(theme.title)}</strong>
+      <p class="small">${theme.choices.map(escapeHtml).join(" / ")}</p>
       <p class="small">点数：${scores.join(", ")}</p>
       <p class="small">レア演出：${rareText}</p>
       <button class="edit" onclick="editTheme(${theme.id})">編集する</button>
@@ -398,6 +402,7 @@ function openThemeList(){
     `;
     box.appendChild(div);
   });
+
   showPage("themeListPage");
 }
 
@@ -408,8 +413,10 @@ function editTheme(id){
   editingId=id;
   document.getElementById("createTitle").textContent="✏️ お題編集";
   document.getElementById("themeTitle").value=theme.title;
+
   document.getElementById("choiceInputs").innerHTML="";
   theme.choices.forEach(choice=>addChoiceInput(choice));
+
   initScores(theme.scores||defaultScores);
   document.getElementById("themeRareEnabled").checked=theme.rareEnabled!==false;
   showPage("createPage");
@@ -422,6 +429,7 @@ function deleteTheme(id){
   openThemeList();
 }
 
+/* 投票準備 */
 function openStartPage(){
   const select=document.getElementById("themeSelect");
   select.innerHTML="";
@@ -447,6 +455,7 @@ function makePlayerInputs(){
   const count=Number(document.getElementById("playerCount").value);
   const box=document.getElementById("playerInputs");
   box.innerHTML="";
+
   for(let i=0;i<count;i++){
     const input=document.createElement("input");
     input.placeholder=`${i+1}人目の名前`;
@@ -470,6 +479,7 @@ function startVote(){
   startPlayerVote();
 }
 
+/* 投票 */
 function startPlayerVote(){
   currentRank=1;
   remainingChoices=[...currentTheme.choices];
@@ -488,6 +498,7 @@ function renderVote(){
 
   const choiceBox=document.getElementById("voteChoices");
   choiceBox.innerHTML="";
+
   remainingChoices.forEach(choice=>{
     const btn=document.createElement("button");
     btn.className="choice-btn";
@@ -498,6 +509,7 @@ function renderVote(){
 
   const selectedBox=document.getElementById("selectedList");
   selectedBox.innerHTML="";
+
   currentSelections.forEach((choice,index)=>{
     const div=document.createElement("div");
     div.className="rank-item";
@@ -523,15 +535,10 @@ function selectChoice(choice){
   renderVote();
 }
 
-  renderVote();
-}
-  renderVote();
-}
-
 function finishPlayerVote(){
   allVotes.push({
     player:players[currentPlayerIndex],
-    selections:currentSelections
+    selections:[...currentSelections]
   });
 
   lastActorName=players[currentPlayerIndex]||"参加者";
@@ -545,11 +552,13 @@ function finishPlayerVote(){
   }
 }
 
+/* 結果 */
 function showResult(){
   const scores={};
   const scoreRule=currentTheme.scores||defaultScores;
 
   currentTheme.choices.forEach(choice=>scores[choice]=0);
+
   allVotes.forEach(vote=>{
     vote.selections.forEach((choice,index)=>{
       scores[choice]+=scoreRule[index]??0;
@@ -557,6 +566,7 @@ function showResult(){
   });
 
   lastRanking=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+
   renderTotalResult();
   renderPersonalResult();
   showResultTab("total");
@@ -578,7 +588,7 @@ function renderTotalResult(){
     if(index===2){medal="🥉";cls="top3"}
 
     div.innerHTML=`
-      <div class="result-rank ${cls}">${medal} ${choice}</div>
+      <div class="result-rank ${cls}">${medal} ${escapeHtml(choice)}</div>
       <div>${score}点</div>
     `;
     box.appendChild(div);
@@ -593,9 +603,9 @@ function renderPersonalResult(){
     const div=document.createElement("div");
     div.className="rank-item";
 
-    let html=`<strong>👤 ${vote.player}</strong>`;
+    let html=`<strong>👤 ${escapeHtml(vote.player)}</strong>`;
     vote.selections.forEach((choice,index)=>{
-      html+=`<p>${index+1}位：${choice}</p>`;
+      html+=`<p>${index+1}位：${escapeHtml(choice)}</p>`;
     });
 
     div.innerHTML=html;
@@ -610,6 +620,7 @@ function showResultTab(type){
 
 function copyResult(){
   let text=`【${currentTheme.title} 結果】\n\n`;
+
   text+="■総合ランキング\n";
   lastRanking.forEach(([choice,score],index)=>{
     text+=`${index+1}位：${choice} ${score}点\n`;
@@ -628,43 +639,14 @@ function copyResult(){
     .catch(()=>alert("コピーできませんでした"));
 }
 
-/* タイトルタップ・レア演出 */
-function titleTap(){
-  if(isPageVisible("topPage")){
-    openMinesweeper();
-  }
-}
-
+/* レア演出：投票中の選択肢タップだけで抽選 */
 function runRareLottery(){
-  const rareAllowed = currentTheme ? currentTheme.rareEnabled !== false : true;
-  if(!rareAllowed) return;
+  if(!isPageVisible("votePage"))return;
 
-  if(Math.floor(Math.random()*16384)===0){
-    showGodFreeze(lastActorName);
-    return;
-  }
-
-  rareCountdown--;
-  localStorage.setItem("rareCountdown",String(rareCountdown));
-  updateLamp();
-
-  if(rareCountdown<=0){
-    showSuperRare();
-    resetRareCountdown();
-    updateLamp();
-  }
-}
-
-  // それ以外はマインスイーパー
-  openMinesweeper();
-}
-
-  const rareAllowed = currentTheme ? currentTheme.rareEnabled !== false : true;
+  const rareAllowed=currentTheme ? currentTheme.rareEnabled!==false : true;
   if(!rareAllowed)return;
 
-  const duringVoteOrResult = isPageVisible("votePage") || isPageVisible("resultPage");
-
-  if(duringVoteOrResult && Math.floor(Math.random()*16384)===0){
+  if(Math.floor(Math.random()*16384)===0){
     showGodFreeze(lastActorName);
     return;
   }
@@ -687,16 +669,13 @@ function resetRareCountdown(){
 
 function updateLamp(){
   const lamp=document.getElementById("lamp");
-  const rareAllowed = currentTheme ? currentTheme.rareEnabled !== false : true;
+  const rareAllowed=currentTheme ? currentTheme.rareEnabled!==false : true;
 
   if(
+    isPageVisible("votePage") &&
     rareAllowed &&
-    rareCountdown<=5 &&
     rareCountdown>=1 &&
-    !isPageVisible("createPage") &&
-    !isPageVisible("minePage") &&
-    !isPageVisible("configLockPage") &&
-    !isPageVisible("configPage")
+    rareCountdown<=5
   ){
     lamp.classList.remove("hidden");
   }else{
@@ -707,7 +686,7 @@ function updateLamp(){
 function testLamp(){
   const lamp=document.getElementById("lamp");
   lamp.classList.remove("hidden");
-  setTimeout(()=>lamp.classList.add("hidden"),3000);
+  setTimeout(()=>updateLamp(),3000);
 }
 
 function showSuperRare(){
@@ -723,7 +702,6 @@ function showSuperRare(){
 function showGodFreeze(name){
   const overlay=document.createElement("div");
   overlay.className="freeze-overlay";
-
   document.body.appendChild(overlay);
 
   setTimeout(()=>{
@@ -733,12 +711,7 @@ function showGodFreeze(name){
           ${escapeHtml(name)}から<br>
           飲んでください
         </div>
-
-        <button
-          style="margin-top:30px"
-          onclick="this.closest('.freeze-overlay').remove()">
-          乾杯！
-        </button>
+        <button style="margin-top:30px" onclick="this.closest('.freeze-overlay').remove()">乾杯！</button>
       </div>
     `;
   },1500);
@@ -751,10 +724,6 @@ function escapeHtml(str){
     .replaceAll(">","&gt;")
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
-}
-
-function isPageVisible(id){
-  return !document.getElementById(id).classList.contains("hidden");
 }
 
 /* config */
@@ -887,6 +856,7 @@ function toggleFlag(index){
 
 function openCell(index){
   if(mineGameOver)return;
+
   const cell=mineCells[index];
   if(cell.open || cell.flag)return;
 
@@ -902,7 +872,7 @@ function openCell(index){
 
   if(cell.count===0){
     getNeighbors(index).forEach(i=>{
-      if(!mineCells[i].open && !mineCells[i].flag) openCell(i);
+      if(!mineCells[i].open && !mineCells[i].flag)openCell(i);
     });
   }
 
