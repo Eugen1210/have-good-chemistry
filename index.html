@@ -688,19 +688,25 @@ function showSuperRare(){
 function showGodFreeze(name){
   const overlay=document.createElement("div");
   overlay.className="freeze-overlay";
-  overlay.innerHTML=`<div class="freeze-dots">・・・</div>`;
-  document.body.appendChild(overlay);
 
-  setTimeout(()=>{overlay.innerHTML=`<div class="freeze-dots">・・・・・・</div>`},800);
+  document.body.appendChild(overlay);
 
   setTimeout(()=>{
     overlay.innerHTML=`
       <div>
-        <div class="freeze-text">${escapeHtml(name)}から<br>飲んでください</div>
-        <button style="margin-top:30px" onclick="this.closest('.freeze-overlay').remove()">乾杯！</button>
+        <div class="freeze-text">
+          ${escapeHtml(name)}から<br>
+          飲んでください
+        </div>
+
+        <button
+          style="margin-top:30px"
+          onclick="this.closest('.freeze-overlay').remove()">
+          乾杯！
+        </button>
       </div>
     `;
-  },1700);
+  },1500);
 }
 
 function escapeHtml(str){
