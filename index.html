@@ -53,17 +53,19 @@ input,select{
 .tabs{display:flex;gap:8px}.tabs button{font-size:14px;padding:12px 6px}
 
 /* HGC CHANCEランプ */
-.hgc-lamp{
-  position:fixed;right:14px;bottom:18px;z-index:8000;
-  width:82px;height:82px;border-radius:50%;
-  background:radial-gradient(circle,#fff7a8,#ffd700,#ff8c00);
-  border:3px solid rgba(255,255,255,.8);
-  box-shadow:0 0 18px rgba(255,215,0,.75);
-  opacity:.42;
-  display:flex;align-items:center;justify-content:center;
-  text-align:center;font-weight:900;font-size:13px;color:#5c3000;
-  animation:lampPulse 1.1s infinite;
+#lamp{
+  position:fixed;
+  right:10px;
+  bottom:15px;
+  z-index:8000;
+  opacity:.6;
   pointer-events:none;
+}
+
+#lamp img{
+  width:90px;
+  height:auto;
+  filter:drop-shadow(0 0 10px gold);
 }
 @keyframes lampPulse{
   0%,100%{transform:scale(1);opacity:.35}
@@ -237,7 +239,9 @@ input,select{
   </div>
 </div>
 
-<div id="lamp" class="hgc-lamp hidden">HGC<br>CHANCE</div>
+<div id="lamp" class="hidden">
+  <img id="lampImg" src="gogo_chance.png">
+</div>
 
 <script>
 let themes=JSON.parse(localStorage.getItem("rankingThemes")||"[]");
