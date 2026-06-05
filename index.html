@@ -295,7 +295,7 @@ textarea{
     <div class="rank-item">
       <strong>Version 1.1</strong>
       <p>・回答者と投票者を分離できる機能を追加</p>
-      <p>・回答表示順ランダム化を追加</p>
+      <p>・回答表示順ランダム化を追加</p><p>・匿名系では回答番号を非表示に変更</p>
       <p>・匿名公開モードを追加</p>
       <p>・完全匿名モードを追加</p>
       <p>・匿名推理モードを追加</p>
@@ -508,7 +508,7 @@ textarea{
   </div>
 </div>
 
-<div class="version-badge" onclick="showPage('historyPage')">KUON GAME<br>v1.1</div>
+<div id="versionBadge" class="version-badge hidden" onclick="showPage('historyPage')">KUON GAME<br>v1.1</div>
 <div id="lamp" class="hidden"><img src="gogo_chance.png" alt="GOGO CHANCE"></div>
 
 <script>
@@ -556,8 +556,16 @@ function showPage(pageId){
     const el=document.getElementById(id);
     if(el) el.classList.add("hidden");
   });
+
   const target=document.getElementById(pageId);
   if(target) target.classList.remove("hidden");
+
+  const badge=document.getElementById("versionBadge");
+  if(badge){
+    badge.classList.toggle("hidden",pageId!=="topPage");
+    badge.style.pointerEvents=pageId==="topPage" ? "auto" : "none";
+  }
+
   updateLamp();
 }
 
@@ -989,13 +997,13 @@ function startPlayerVote(){
         id:a.id,
         text:a.text,
         owner:a.player,
-        anonLabel:`回答${index+1}`
+        anonLabel:"匿名回答"
       })))
     : shuffleArray((currentTheme.choices||[]).map((text,index)=>({
         id:index,
         text,
         owner:"",
-        anonLabel:`選択肢${index+1}`
+        anonLabel:"選択肢"
       })));
 
   remainingChoices=[...source];
@@ -1009,10 +1017,8 @@ function startPlayerVote(){
 }
 
 function getChoiceLabel(choice){
-  const mode=currentTheme.ownerRevealMode||"show";
-  if(currentTheme.mode==="free" && mode!=="show"){
-    return `${choice.anonLabel}\n${choice.text}`;
-  }
+  // 匿名系では「回答1・回答2」のような番号も出さない。
+  // 表示順と番号から回答者を推測されないように、回答本文だけを出す。
   return choice.text;
 }
 
@@ -1107,7 +1113,7 @@ function renderBestWorst(){
     id:a.id,
     text:a.text,
     owner:a.player,
-    anonLabel:`回答${index+1}`
+    anonLabel:"匿名回答"
   })));
 
   list.forEach(ans=>{
@@ -1169,8 +1175,8 @@ function showResult(){
 function buildRankingResult(){
   const map={};
   const source=(currentTheme.mode==="free")
-    ? freeAnswers.map((a,index)=>({id:a.id,text:a.text,owner:a.player,score:0,anonLabel:`回答${index+1}`}))
-    : (currentTheme.choices||[]).map((text,index)=>({id:index,text,owner:"",score:0,anonLabel:`選択肢${index+1}`}));
+    ? freeAnswers.map((a,index)=>({id:a.id,text:a.text,owner:a.player,score:0,anonLabel:"匿名回答"}))
+    : (currentTheme.choices||[]).map((text,index)=>({id:index,text,owner:"",score:0,anonLabel:"選択肢"}));
 
   source.forEach(item=>{
     map[item.text]={...item};
@@ -1194,7 +1200,7 @@ function buildRankingResult(){
 function buildBestWorstResult(){
   const map={};
   freeAnswers.forEach((a,index)=>{
-    map[a.text]={id:a.id,text:a.text,owner:a.player,score:0,best:0,worst:0,anonLabel:`回答${index+1}`};
+    map[a.text]={id:a.id,text:a.text,owner:a.player,score:0,best:0,worst:0,anonLabel:"匿名回答"};
   });
 
   allVotes.forEach(vote=>{
@@ -1676,7 +1682,7 @@ document.addEventListener("gestureend",function(e){
 initChoices(5);
 initScores();
 makeRouletteInputs();
-updateLamp();
+showPage("topPage");
 </script>
 </body>
 </html>
