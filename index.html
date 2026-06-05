@@ -3,11 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
-
-<title>have good chemistry</title>
+<title>KUON game</title>
 
 <style>
 *{box-sizing:border-box}
@@ -19,7 +17,7 @@ body{
 }
 .app{max-width:430px;margin:0 auto;min-height:100vh;padding:18px}
 h1,h2,h3{text-align:center}
-h1{font-size:30px;color:#ff6fae;line-height:1.1;cursor:pointer;user-select:none}
+h1{font-size:32px;color:#ff6fae;line-height:1.1;cursor:pointer;user-select:none}
 .card{
   background:#fff;border-radius:24px;padding:18px;margin:14px 0;
   box-shadow:0 8px 20px rgba(255,120,170,.18);
@@ -29,48 +27,33 @@ button{
   font-size:17px;font-weight:bold;background:#ff9ac8;color:#fff;cursor:pointer;
 }
 button:active{transform:scale(.98)}
-.sub{background:#8fc7ff}
-.gray{background:#aaa}
-.danger{background:#ff7777}
-.edit{background:#b99cff}
-input,select{
+.sub{background:#8fc7ff}.gray{background:#aaa}.danger{background:#ff7777}.edit{background:#b99cff}
+input,select,textarea{
   width:100%;padding:13px;margin:7px 0;border-radius:14px;
   border:2px solid #ffd1e5;font-size:16px;
 }
+textarea{min-height:90px;resize:vertical}
 .hidden{display:none!important}
 .small{font-size:13px;color:#777;text-align:center}
 .row{display:flex;gap:8px;align-items:center}
 .row input{flex:1}
 .scoreInput{max-width:72px;text-align:center}
-.choice-btn{
-  background:#fff5fb;color:#4a3a3a;border:2px solid #ffaad1;text-align:left;
-}
-.rank-item{
-  background:#fff5fb;border-radius:16px;padding:12px;margin:8px 0;
-  border:2px solid #ffd1e5;
-}
+.choice-btn{background:#fff5fb;color:#4a3a3a;border:2px solid #ffaad1;text-align:left}
+.rank-item{background:#fff5fb;border-radius:16px;padding:12px;margin:8px 0;border:2px solid #ffd1e5}
 .result-rank{font-size:18px;font-weight:bold}
 .top1{color:#f0a000}.top2{color:#888}.top3{color:#b87333}
 .tabs{display:flex;gap:8px}.tabs button{font-size:14px;padding:12px 6px}
 .checkrow{display:flex;align-items:center;gap:8px;margin:10px 0}
 .checkrow input{width:auto}
-
-/* GOGO CHANCE */
+.blackout{
+  position:fixed;inset:0;z-index:9000;background:#000;color:#fff;
+  display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;
+}
+.blackout .box{max-width:360px}
 #lamp{
-  position:fixed;
-  right:10px;
-  bottom:15px;
-  z-index:8000;
-  opacity:.6;
-  pointer-events:none;
+  position:fixed;right:10px;bottom:15px;z-index:8000;opacity:.65;pointer-events:none;
 }
-#lamp img{
-  width:90px;
-  height:auto;
-  filter:drop-shadow(0 0 10px gold);
-}
-
-/* SUPER RARE */
+#lamp img{width:90px;height:auto;filter:drop-shadow(0 0 10px gold)}
 .rare-overlay{
   position:fixed;inset:0;z-index:9999;background:#000;
   display:flex;align-items:center;justify-content:center;
@@ -80,8 +63,6 @@ input,select{
   position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
   width:82%;max-width:330px;background:rgba(255,154,200,.9);
 }
-
-/* GOD風 */
 .freeze-overlay{
   position:fixed;inset:0;z-index:10000;background:#000;
   display:flex;align-items:center;justify-content:center;
@@ -92,54 +73,85 @@ input,select{
   text-shadow:0 0 10px rgba(255,215,0,.5),0 0 24px rgba(255,215,0,.35);
   animation:goldAppear .5s ease;
 }
-@keyframes goldAppear{
-  from{opacity:0;transform:scale(.92)}
-  to{opacity:1;transform:scale(1)}
-}
-
-/* マインスイーパー */
+@keyframes goldAppear{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
 .mine-board{display:grid;gap:4px;justify-content:center;margin:12px auto}
 .cell{
   width:34px;height:34px;border-radius:8px;border:none;background:#ffd1e5;
   color:#4a3a3a;font-weight:bold;font-size:16px;padding:0;margin:0;
 }
 .cell.open{background:#fff5fb;border:1px solid #ffd1e5}
-.cell.flag{background:#ffe08a}
-.cell.mine{background:#ff7777}
+.cell.flag{background:#ffe08a}.cell.mine{background:#ff7777}
+.roulette-wrap{
+  width:280px;height:280px;margin:18px auto;position:relative;
+}
+.pointer{
+  position:absolute;top:-8px;left:50%;transform:translateX(-50%);
+  z-index:2;font-size:34px;color:#ff6fae;
+}
+.wheel{
+  width:280px;height:280px;border-radius:50%;
+  border:8px solid #fff;box-shadow:0 0 20px rgba(0,0,0,.18);
+  transition:transform 4s cubic-bezier(.12,.82,.2,1);
+  background:conic-gradient(#ff9ac8 0 60deg,#8fc7ff 60deg 120deg,#ffd36e 120deg 180deg,#b99cff 180deg 240deg,#90e0b0 240deg 300deg,#ff9a76 300deg 360deg);
+  position:relative;overflow:hidden;
+}
+.wheel-label{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  background:rgba(255,255,255,.9);padding:12px;border-radius:18px;font-weight:bold;text-align:center;
+}
 </style>
 </head>
 
 <body>
 <div class="app">
-  <h1 onclick="titleTap()">have good<br>chemistry</h1>
+  <h1 onclick="titleTap()">KUON<br>game</h1>
 
   <div id="topPage" class="card">
     <h2>トップページ</h2>
     <button onclick="newTheme()">📝 お題を作る</button>
     <button onclick="openStartPage()">🎮 投票を始める</button>
     <button onclick="openThemeList()">📚 保存したお題を見る</button>
+    <button class="sub" onclick="openRoulette()">🎡 ルーレット</button>
     <button class="gray" onclick="openConfig()">⚙️ config</button>
+    <p class="small">タイトル「KUON game」タップでマインスイーパー</p>
   </div>
 
   <div id="createPage" class="card hidden">
     <h2 id="createTitle">📝 お題作成</h2>
-    <label>お題名</label>
-    <input id="themeTitle" placeholder="例：好きなラーメン">
 
-    <h3>ランキング候補</h3>
-    <div id="choiceInputs"></div>
-    <button class="sub" onclick="addChoiceInput()">＋ 候補を追加</button>
+    <label>ゲーム形式</label>
+    <select id="themeMode" onchange="renderModeOptions()">
+      <option value="preset">通常ランキング</option>
+      <option value="free">自由回答 → ランキング</option>
+      <option value="second">2番目を決める</option>
+      <option value="bestworst">自由回答 → 1番とビリを決める</option>
+    </select>
+
+    <label>お題名</label>
+    <input id="themeTitle" placeholder="例：外食何食べたい？">
+
+    <label>回答数 / 選ぶ数（1〜5）</label>
+    <input id="answerCount" type="number" min="1" max="5" value="5" onchange="syncCreateCounts()">
+
+    <label>選択肢の数（1〜5）※通常系のみ</label>
+    <input id="choiceCount" type="number" min="1" max="5" value="5" onchange="syncCreateCounts()">
+
+    <div id="presetChoiceArea">
+      <h3>ランキング候補</h3>
+      <div id="choiceInputs"></div>
+    </div>
 
     <h3>点数配分</h3>
     <p class="small">標準は 1位から順に 5, 3, 1, 0, -1</p>
     <div id="scoreInputs"></div>
     <button class="sub" onclick="resetScores()">標準点数に戻す</button>
 
+    <h3>表示設定</h3>
+    <label class="checkrow"><input type="checkbox" id="showTotalResult" checked> 全体結果を表示</label>
+    <label class="checkrow"><input type="checkbox" id="showPersonalResult" checked> 個人回答を表示</label>
+
     <h3>レア演出</h3>
-    <label class="checkrow">
-      <input type="checkbox" id="themeRareEnabled" checked>
-      このお題でレア演出を有効にする
-    </label>
+    <label class="checkrow"><input type="checkbox" id="themeRareEnabled" checked> このお題でレア演出を有効にする</label>
 
     <button onclick="saveTheme()">保存する</button>
     <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
@@ -162,8 +174,16 @@ input,select{
     <h3>参加者名</h3>
     <div id="playerInputs"></div>
 
-    <button onclick="startVote()">投票スタート</button>
+    <button onclick="startGame()">スタート</button>
     <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+  </div>
+
+  <div id="answerInputPage" class="card hidden">
+    <h2 id="answerThemeTitle"></h2>
+    <h3 id="answerPlayerName"></h3>
+    <p class="small">他の人に見えないように入力してね</p>
+    <textarea id="freeAnswerText" placeholder="例：ラーメン、焼肉、寿司など"></textarea>
+    <button onclick="submitFreeAnswer()">回答する</button>
   </div>
 
   <div id="votePage" class="card hidden">
@@ -174,18 +194,57 @@ input,select{
 
     <h3>選んだ順番</h3>
     <div id="selectedList"></div>
+    <button class="gray" onclick="undoSelection()">ひとつ前に戻る</button>
+  </div>
+
+  <div id="bestWorstPage" class="card hidden">
+    <h2 id="bwThemeTitle"></h2>
+    <h3 id="bwPlayerName"></h3>
+    <p class="small" id="bwStepText"></p>
+    <div id="bwChoices"></div>
+    <button class="gray" onclick="undoBestWorst()">ひとつ前に戻る</button>
+  </div>
+
+  <div id="handoffPage" class="blackout hidden">
+    <div class="box">
+      <h2 id="handoffText"></h2>
+      <p>前の人の回答は隠れています</p>
+      <button onclick="continueAfterHandoff()">開始</button>
+    </div>
   </div>
 
   <div id="resultPage" class="card hidden">
     <h2>🏆 結果発表</h2>
     <div class="tabs">
-      <button onclick="showResultTab('total')">総合結果</button>
+      <button onclick="showResultTab('total')">全体結果</button>
       <button class="sub" onclick="showResultTab('personal')">個人回答</button>
     </div>
     <div id="totalResultBox"></div>
     <div id="personalResultBox" class="hidden"></div>
     <button onclick="copyResult()">結果をコピー</button>
     <button class="sub" onclick="openStartPage()">もう一度遊ぶ</button>
+    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+  </div>
+
+  <div id="roulettePage" class="card hidden">
+    <h2>🎡 ルーレット</h2>
+    <label>人数（2〜6）</label>
+    <input id="rouletteCount" type="number" min="2" max="6" value="4" onchange="makeRouletteInputs()">
+
+    <label>回転数（2〜10）</label>
+    <input id="rouletteSpins" type="number" min="2" max="10" value="5">
+
+    <p class="small">振り幅が大きい人ほど当たりやすくなります</p>
+    <div id="rouletteInputs"></div>
+
+    <div class="roulette-wrap">
+      <div class="pointer">▼</div>
+      <div id="wheel" class="wheel">
+        <div id="wheelLabel" class="wheel-label">KUON</div>
+      </div>
+    </div>
+
+    <button onclick="spinRoulette()">回す</button>
     <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
   </div>
 
@@ -213,6 +272,17 @@ input,select{
     <button onclick="showGodFreeze('テスト参加者')">GOD風確認</button>
     <button class="sub" onclick="testLamp()">GOGO CHANCE確認</button>
 
+    <h3>レア演出確率</h3>
+    <label>SUPER RARE基本カウント</label>
+    <input id="rareBaseInput" type="number" min="10" max="9999">
+    <label>GOGO点灯後の最小カウント</label>
+    <input id="gogoMinInput" type="number" min="1" max="99">
+    <label>GOGO点灯後の最大カウント</label>
+    <input id="gogoMaxInput" type="number" min="1" max="99">
+    <label>GOD風確率 分母</label>
+    <input id="godRateInput" type="number" min="100" max="999999">
+    <button onclick="saveRareSettings()">確率設定を保存</button>
+
     <h3>パスワード変更</h3>
     <input id="pass1Input" placeholder="パスワード1">
     <input id="pass2Input" placeholder="パスワード2">
@@ -223,12 +293,19 @@ input,select{
 </div>
 
 <div id="lamp" class="hidden">
-  <img id="lampImg" src="gogo_chance.png" alt="GOGO CHANCE">
+  <img src="gogo_chance.png" alt="GOGO CHANCE">
 </div>
 
 <script>
-let themes=JSON.parse(localStorage.getItem("rankingThemes")||"[]");
-let config=JSON.parse(localStorage.getItem("hgcConfig")||"null")||{pass1:"0721",pass2:"hgc"};
+let themes=JSON.parse(localStorage.getItem("kuonThemes")||localStorage.getItem("rankingThemes")||"[]");
+let config=JSON.parse(localStorage.getItem("kuonConfig")||"null")||{
+  pass1:"0721",
+  pass2:"hgc",
+  rareBase:100,
+  gogoMin:3,
+  gogoMax:7,
+  godRate:16384
+};
 
 let editingId=null;
 let currentTheme=null;
@@ -240,185 +317,217 @@ let currentSelections=[];
 let allVotes=[];
 let lastRanking=[];
 let lastActorName="参加者";
+let freeAnswers=[];
+let freeAnswerIndex=0;
+let bwState={best:null,worst:null,step:"best"};
+let pendingNextAction=null;
 
-let rareCountdown=Number(localStorage.getItem("rareCountdown")||"0");
+let rareCountdown=Number(localStorage.getItem("kuonRareCountdown")||"0");
+let gogoLead=Number(localStorage.getItem("kuonGogoLead")||"0");
 if(!rareCountdown || rareCountdown<1) resetRareCountdown();
 
 const defaultScores=[5,3,1,0,-1];
 
 function showPage(pageId){
-  ["topPage","createPage","themeListPage","startPage","votePage","resultPage","minePage","configLockPage","configPage"].forEach(id=>{
-    document.getElementById(id).classList.add("hidden");
-  });
+  [
+    "topPage","createPage","themeListPage","startPage","answerInputPage",
+    "votePage","bestWorstPage","handoffPage","resultPage","roulettePage",
+    "minePage","configLockPage","configPage"
+  ].forEach(id=>document.getElementById(id).classList.add("hidden"));
   document.getElementById(pageId).classList.remove("hidden");
   updateLamp();
 }
 
-function isPageVisible(id){
-  return !document.getElementById(id).classList.contains("hidden");
-}
-
+function isPageVisible(id){return !document.getElementById(id).classList.contains("hidden")}
 function saveStorage(){
+  localStorage.setItem("kuonThemes",JSON.stringify(themes));
   localStorage.setItem("rankingThemes",JSON.stringify(themes));
 }
-function saveConfig(){
-  localStorage.setItem("hgcConfig",JSON.stringify(config));
+function saveConfig(){localStorage.setItem("kuonConfig",JSON.stringify(config))}
+function clamp(n,min,max){return Math.max(min,Math.min(max,Number(n)||min))}
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 }
 
 /* タイトルはトップページでだけマインスイーパー */
 function titleTap(){
-  if(isPageVisible("topPage")){
-    openMinesweeper();
-  }
+  if(isPageVisible("topPage")) openMinesweeper();
 }
 
 /* お題作成 */
 function newTheme(){
   editingId=null;
   document.getElementById("createTitle").textContent="📝 お題作成";
+  document.getElementById("themeMode").value="preset";
   document.getElementById("themeTitle").value="";
+  document.getElementById("answerCount").value=5;
+  document.getElementById("choiceCount").value=5;
+  document.getElementById("showTotalResult").checked=true;
+  document.getElementById("showPersonalResult").checked=true;
   document.getElementById("themeRareEnabled").checked=true;
-  initChoices();
+  renderModeOptions();
+  initChoices(5);
   initScores();
   showPage("createPage");
 }
 
-function initChoices(){
+function renderModeOptions(){
+  const mode=document.getElementById("themeMode").value;
+  const area=document.getElementById("presetChoiceArea");
+  area.classList.toggle("hidden",mode==="free"||mode==="bestworst");
+  syncCreateCounts();
+}
+
+function syncCreateCounts(){
+  let answerCount=clamp(document.getElementById("answerCount").value,1,5);
+  let choiceCount=clamp(document.getElementById("choiceCount").value,1,5);
+  document.getElementById("answerCount").value=answerCount;
+  document.getElementById("choiceCount").value=choiceCount;
+  if(answerCount>choiceCount && document.getElementById("themeMode").value!=="free" && document.getElementById("themeMode").value!=="bestworst"){
+    document.getElementById("answerCount").value=choiceCount;
+    answerCount=choiceCount;
+  }
+  adjustChoiceInputs(choiceCount);
+  initScores(Array.from(document.querySelectorAll("#scoreInputs input")).map(i=>Number(i.value)),answerCount);
+}
+
+function initChoices(count=5,values=[]){
   const box=document.getElementById("choiceInputs");
   box.innerHTML="";
-  for(let i=0;i<5;i++) addChoiceInput();
+  for(let i=0;i<count;i++) addChoiceInput(values[i]||"");
+}
+
+function adjustChoiceInputs(count){
+  const box=document.getElementById("choiceInputs");
+  const current=Array.from(box.querySelectorAll("input")).map(i=>i.value);
+  initChoices(count,current);
 }
 
 function addChoiceInput(value=""){
   const box=document.getElementById("choiceInputs");
   const wrap=document.createElement("div");
   wrap.className="row";
-
   const input=document.createElement("input");
-  input.placeholder="例：味噌ラーメン";
+  input.placeholder="例：ラーメン";
   input.value=value;
-
-  const del=document.createElement("button");
-  del.textContent="×";
-  del.className="danger";
-  del.style.width="54px";
-  del.onclick=()=>wrap.remove();
-
   wrap.appendChild(input);
-  wrap.appendChild(del);
   box.appendChild(wrap);
 }
 
-function initScores(scores=defaultScores){
+function initScores(scores=defaultScores,count=null){
+  const c=count||clamp(document.getElementById("answerCount")?.value||5,1,5);
   const box=document.getElementById("scoreInputs");
   box.innerHTML="";
-  for(let i=0;i<5;i++){
+  for(let i=0;i<c;i++){
     const wrap=document.createElement("div");
     wrap.className="row";
-
     const label=document.createElement("div");
     label.textContent=`${i+1}位`;
     label.style.width="60px";
-
     const input=document.createElement("input");
     input.type="number";
     input.className="scoreInput";
-    input.value=scores[i]??0;
-
+    input.value=scores[i]??defaultScores[i]??0;
     const text=document.createElement("div");
     text.textContent="点";
     text.style.width="30px";
-
-    wrap.appendChild(label);
-    wrap.appendChild(input);
-    wrap.appendChild(text);
+    wrap.appendChild(label);wrap.appendChild(input);wrap.appendChild(text);
     box.appendChild(wrap);
   }
 }
-
-function resetScores(){
-  initScores(defaultScores);
-}
+function resetScores(){initScores(defaultScores)}
 
 function getChoicesFromForm(){
   return Array.from(document.querySelectorAll("#choiceInputs input"))
     .map(input=>input.value.trim())
     .filter(text=>text!=="");
 }
-
 function getScoresFromForm(){
   return Array.from(document.querySelectorAll("#scoreInputs input"))
     .map(input=>Number(input.value));
 }
 
 function saveTheme(){
+  const mode=document.getElementById("themeMode").value;
   const title=document.getElementById("themeTitle").value.trim();
+  const answerCount=clamp(document.getElementById("answerCount").value,1,5);
+  const choiceCount=clamp(document.getElementById("choiceCount").value,1,5);
   const choices=getChoicesFromForm();
   const scores=getScoresFromForm();
-  const rareEnabled=document.getElementById("themeRareEnabled").checked;
 
   if(!title){alert("お題名を入力してね");return}
-  if(choices.length<5){alert("候補は最低5個入れてね");return}
+  if((mode==="preset"||mode==="second") && choices.length<1){alert("選択肢を入力してね");return}
+  if((mode==="preset"||mode==="second") && answerCount>choices.length){alert("回答数は選択肢数以下にしてね");return}
   if(scores.some(score=>Number.isNaN(score))){alert("点数は数字で入力してね");return}
 
+  const data={
+    id:editingId||Date.now(),
+    mode,title,answerCount,choiceCount,
+    choices:(mode==="free"||mode==="bestworst")?[]:choices.slice(0,choiceCount),
+    scores,
+    rareEnabled:document.getElementById("themeRareEnabled").checked,
+    showTotal:document.getElementById("showTotalResult").checked,
+    showPersonal:document.getElementById("showPersonalResult").checked
+  };
+
   if(editingId){
-    const theme=themes.find(t=>t.id===editingId);
-    theme.title=title;
-    theme.choices=choices;
-    theme.scores=scores;
-    theme.rareEnabled=rareEnabled;
+    const idx=themes.findIndex(t=>t.id===editingId);
+    themes[idx]=data;
     alert("編集を保存したよ！");
   }else{
-    themes.push({id:Date.now(),title,choices,scores,rareEnabled});
+    themes.push(data);
     alert("保存したよ！");
   }
-
   saveStorage();
   editingId=null;
   showPage("topPage");
 }
 
-/* お題一覧 */
+/* 一覧 */
 function openThemeList(){
   const box=document.getElementById("themeList");
   box.innerHTML="";
-
-  if(themes.length===0){
-    box.innerHTML="<p class='small'>まだお題がありません</p>";
-  }
+  if(themes.length===0) box.innerHTML="<p class='small'>まだお題がありません</p>";
 
   themes.forEach(theme=>{
-    const scores=theme.scores||defaultScores;
-    const rareText=theme.rareEnabled===false ? "OFF" : "ON";
+    const modeLabel={
+      preset:"通常ランキング",
+      free:"自由回答→ランキング",
+      second:"2番目を決める",
+      bestworst:"自由回答→1番とビリ"
+    }[theme.mode||"preset"];
     const div=document.createElement("div");
     div.className="rank-item";
     div.innerHTML=`
       <strong>${escapeHtml(theme.title)}</strong>
-      <p class="small">${theme.choices.map(escapeHtml).join(" / ")}</p>
-      <p class="small">点数：${scores.join(", ")}</p>
-      <p class="small">レア演出：${rareText}</p>
+      <p class="small">形式：${modeLabel}</p>
+      <p class="small">回答数：${theme.answerCount||5} / 選択肢：${(theme.choices||[]).join(" / ")}</p>
+      <p class="small">全体：${theme.showTotal===false?"OFF":"ON"} / 個人：${theme.showPersonal===false?"OFF":"ON"} / レア：${theme.rareEnabled===false?"OFF":"ON"}</p>
       <button class="edit" onclick="editTheme(${theme.id})">編集する</button>
       <button class="danger" onclick="deleteTheme(${theme.id})">削除</button>
     `;
     box.appendChild(div);
   });
-
   showPage("themeListPage");
 }
 
 function editTheme(id){
   const theme=themes.find(t=>t.id===id);
   if(!theme)return;
-
   editingId=id;
   document.getElementById("createTitle").textContent="✏️ お題編集";
+  document.getElementById("themeMode").value=theme.mode||"preset";
   document.getElementById("themeTitle").value=theme.title;
-
-  document.getElementById("choiceInputs").innerHTML="";
-  theme.choices.forEach(choice=>addChoiceInput(choice));
-
-  initScores(theme.scores||defaultScores);
+  document.getElementById("answerCount").value=theme.answerCount||5;
+  document.getElementById("choiceCount").value=theme.choiceCount||(theme.choices?.length||5);
+  document.getElementById("showTotalResult").checked=theme.showTotal!==false;
+  document.getElementById("showPersonalResult").checked=theme.showPersonal!==false;
   document.getElementById("themeRareEnabled").checked=theme.rareEnabled!==false;
+  renderModeOptions();
+  initChoices(theme.choiceCount||(theme.choices?.length||5),theme.choices||[]);
+  initScores(theme.scores||defaultScores,theme.answerCount||5);
   showPage("createPage");
 }
 
@@ -429,24 +538,17 @@ function deleteTheme(id){
   openThemeList();
 }
 
-/* 投票準備 */
+/* スタート */
 function openStartPage(){
   const select=document.getElementById("themeSelect");
   select.innerHTML="";
-
-  if(themes.length===0){
-    alert("先にお題を作ってね");
-    newTheme();
-    return;
-  }
-
+  if(themes.length===0){alert("先にお題を作ってね");newTheme();return}
   themes.forEach(theme=>{
     const option=document.createElement("option");
     option.value=theme.id;
     option.textContent=theme.title;
     select.appendChild(option);
   });
-
   makePlayerInputs();
   showPage("startPage");
 }
@@ -455,7 +557,6 @@ function makePlayerInputs(){
   const count=Number(document.getElementById("playerCount").value);
   const box=document.getElementById("playerInputs");
   box.innerHTML="";
-
   for(let i=0;i<count;i++){
     const input=document.createElement("input");
     input.placeholder=`${i+1}人目の名前`;
@@ -463,75 +564,130 @@ function makePlayerInputs(){
   }
 }
 
-function startVote(){
+function startGame(){
   const themeId=Number(document.getElementById("themeSelect").value);
   currentTheme=themes.find(theme=>theme.id===themeId);
-
   players=Array.from(document.querySelectorAll("#playerInputs input"))
     .map(input=>input.value.trim())
     .filter(name=>name!=="");
-
   if(players.length===0){alert("参加者名を入れてね");return}
 
   currentPlayerIndex=0;
   allVotes=[];
+  freeAnswers=[];
+  freeAnswerIndex=0;
   lastActorName=players[0]||"参加者";
-  startPlayerVote();
+
+  if(currentTheme.mode==="free"||currentTheme.mode==="bestworst"){
+    showHandoff(`${players[0]}さんの回答入力です`,()=>startFreeAnswer());
+  }else{
+    showHandoff(`${players[0]}さんの番です`,()=>startPlayerVote());
+  }
 }
 
-/* 投票 */
+/* 暗転受け渡し */
+function showHandoff(text,nextFn){
+  document.getElementById("handoffText").textContent=text;
+  pendingNextAction=nextFn;
+  showPage("handoffPage");
+}
+function continueAfterHandoff(){
+  if(pendingNextAction) pendingNextAction();
+}
+
+/* 自由回答 */
+function startFreeAnswer(){
+  lastActorName=players[freeAnswerIndex]||"参加者";
+  document.getElementById("answerThemeTitle").textContent=`お題：${currentTheme.title}`;
+  document.getElementById("answerPlayerName").textContent=`👤 ${players[freeAnswerIndex]} さん`;
+  document.getElementById("freeAnswerText").value="";
+  showPage("answerInputPage");
+}
+
+function submitFreeAnswer(){
+  const text=document.getElementById("freeAnswerText").value.trim();
+  if(!text){alert("回答を入力してね");return}
+  freeAnswers.push({id:Date.now()+freeAnswerIndex,player:players[freeAnswerIndex],text});
+  freeAnswerIndex++;
+
+  if(freeAnswerIndex>=players.length){
+    if(currentTheme.mode==="bestworst"){
+      currentPlayerIndex=0;
+      showHandoff(`${players[0]}さんの番です`,()=>startBestWorstVote());
+    }else{
+      currentPlayerIndex=0;
+      showHandoff(`${players[0]}さんの番です`,()=>startPlayerVote());
+    }
+  }else{
+    showHandoff(`${players[freeAnswerIndex]}さんの回答入力です`,()=>startFreeAnswer());
+  }
+}
+
+/* 通常投票 */
 function startPlayerVote(){
   currentRank=1;
-  remainingChoices=[...currentTheme.choices];
+  const source=(currentTheme.mode==="free")
+    ? freeAnswers.map(a=>({id:a.id,text:a.text,owner:a.player}))
+    : (currentTheme.choices||[]).map((c,i)=>({id:i,text:c,owner:""}));
+  remainingChoices=[...source];
   currentSelections=[];
   lastActorName=players[currentPlayerIndex]||"参加者";
 
   document.getElementById("voteThemeTitle").textContent=`お題：${currentTheme.title}`;
   document.getElementById("votePlayerName").textContent=`👤 ${players[currentPlayerIndex]} さんの番`;
-
   showPage("votePage");
   renderVote();
 }
 
 function renderVote(){
-  document.getElementById("voteRankText").textContent=`${currentRank}位にしたいものを選んでね`;
+  const max=currentTheme.answerCount||5;
+  const mode=currentTheme.mode||"preset";
+  document.getElementById("voteRankText").textContent=
+    mode==="second" ? `2番目に近い順で ${max}個 選んでね` : `${currentRank}位にしたいものを選んでね`;
 
   const choiceBox=document.getElementById("voteChoices");
   choiceBox.innerHTML="";
-
   remainingChoices.forEach(choice=>{
     const btn=document.createElement("button");
     btn.className="choice-btn";
-    btn.textContent=choice;
-    btn.onclick=()=>selectChoice(choice);
+    btn.textContent=choice.text;
+    btn.onclick=()=>selectChoice(choice.id);
     choiceBox.appendChild(btn);
   });
 
   const selectedBox=document.getElementById("selectedList");
   selectedBox.innerHTML="";
-
   currentSelections.forEach((choice,index)=>{
     const div=document.createElement("div");
     div.className="rank-item";
-    div.textContent=`${index+1}位：${choice}`;
+    div.textContent=`${index+1}位：${choice.text}`;
     selectedBox.appendChild(div);
   });
 }
 
-function selectChoice(choice){
+function selectChoice(id){
   lastActorName=players[currentPlayerIndex]||"参加者";
-
   runRareLottery();
 
+  const choice=remainingChoices.find(c=>c.id===id);
+  if(!choice)return;
   currentSelections.push(choice);
-  remainingChoices=remainingChoices.filter(item=>item!==choice);
+  remainingChoices=remainingChoices.filter(item=>item.id!==id);
   currentRank++;
 
-  if(currentSelections.length>=5 || remainingChoices.length===0){
+  const max=currentTheme.answerCount||5;
+  if(currentSelections.length>=max || remainingChoices.length===0){
     finishPlayerVote();
     return;
   }
+  renderVote();
+}
 
+function undoSelection(){
+  if(currentSelections.length===0)return;
+  const last=currentSelections.pop();
+  remainingChoices.push(last);
+  currentRank=Math.max(1,currentRank-1);
   renderVote();
 }
 
@@ -541,73 +697,142 @@ function finishPlayerVote(){
     selections:[...currentSelections]
   });
 
-  lastActorName=players[currentPlayerIndex]||"参加者";
   currentPlayerIndex++;
-
   if(currentPlayerIndex>=players.length){
     showResult();
   }else{
-    alert(`次は ${players[currentPlayerIndex]} さんの番です`);
-    startPlayerVote();
+    showHandoff(`${players[currentPlayerIndex]}さんの番です`,()=>startPlayerVote());
+  }
+}
+
+/* 1番とビリ */
+function startBestWorstVote(){
+  bwState={best:null,worst:null,step:"best"};
+  lastActorName=players[currentPlayerIndex]||"参加者";
+  document.getElementById("bwThemeTitle").textContent=`お題：${currentTheme.title}`;
+  document.getElementById("bwPlayerName").textContent=`👤 ${players[currentPlayerIndex]} さんの番`;
+  showPage("bestWorstPage");
+  renderBestWorst();
+}
+
+function renderBestWorst(){
+  document.getElementById("bwStepText").textContent=bwState.step==="best"?"1番を選んでね":"ビリを選んでね";
+  const box=document.getElementById("bwChoices");
+  box.innerHTML="";
+  freeAnswers.forEach(ans=>{
+    if(bwState.step==="worst" && bwState.best && ans.id===bwState.best.id)return;
+    const btn=document.createElement("button");
+    btn.className="choice-btn";
+    btn.textContent=ans.text;
+    btn.onclick=()=>selectBestWorst(ans.id);
+    box.appendChild(btn);
+  });
+}
+
+function selectBestWorst(id){
+  lastActorName=players[currentPlayerIndex]||"参加者";
+  runRareLottery();
+  const ans=freeAnswers.find(a=>a.id===id);
+  if(!ans)return;
+
+  if(bwState.step==="best"){
+    bwState.best=ans;
+    bwState.step="worst";
+    renderBestWorst();
+  }else{
+    bwState.worst=ans;
+    allVotes.push({player:players[currentPlayerIndex],best:bwState.best,worst:bwState.worst,selections:[bwState.best,bwState.worst]});
+    currentPlayerIndex++;
+    if(currentPlayerIndex>=players.length) showResult();
+    else showHandoff(`${players[currentPlayerIndex]}さんの番です`,()=>startBestWorstVote());
+  }
+}
+
+function undoBestWorst(){
+  if(bwState.step==="worst"){
+    bwState.best=null;
+    bwState.step="best";
+    renderBestWorst();
   }
 }
 
 /* 結果 */
 function showResult(){
-  const scores={};
-  const scoreRule=currentTheme.scores||defaultScores;
-
-  currentTheme.choices.forEach(choice=>scores[choice]=0);
-
-  allVotes.forEach(vote=>{
-    vote.selections.forEach((choice,index)=>{
-      scores[choice]+=scoreRule[index]??0;
-    });
-  });
-
-  lastRanking=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  if(currentTheme.mode==="bestworst") buildBestWorstResult();
+  else buildRankingResult();
 
   renderTotalResult();
   renderPersonalResult();
-  showResultTab("total");
+  showResultTab(currentTheme.showTotal===false ? "personal" : "total");
   showPage("resultPage");
+}
+
+function buildRankingResult(){
+  const scores={};
+  const items=(currentTheme.mode==="free")
+    ? freeAnswers.map(a=>a.text)
+    : currentTheme.choices;
+  items.forEach(text=>scores[text]=0);
+
+  allVotes.forEach(vote=>{
+    vote.selections.forEach((choice,index)=>{
+      if(currentTheme.mode==="second"){
+        scores[choice.text]+=(index===1?5:0);
+      }else{
+        scores[choice.text]+=(currentTheme.scores||defaultScores)[index]??0;
+      }
+    });
+  });
+  lastRanking=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+}
+
+function buildBestWorstResult(){
+  const scores={};
+  freeAnswers.forEach(a=>scores[a.text]=0);
+  allVotes.forEach(vote=>{
+    scores[vote.best.text]+=5;
+    scores[vote.worst.text]-=3;
+  });
+  lastRanking=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
 }
 
 function renderTotalResult(){
   const box=document.getElementById("totalResultBox");
-  box.innerHTML="<h3>🏆 総合ランキング</h3>";
+  box.innerHTML="<h3>🏆 全体結果</h3>";
+  if(currentTheme.showTotal===false){
+    box.innerHTML+="<p class='small'>このお題では全体結果は非表示です</p>";
+    return;
+  }
 
   lastRanking.forEach(([choice,score],index)=>{
     const div=document.createElement("div");
     div.className="rank-item";
-
-    let medal=`${index+1}位`;
-    let cls="";
+    let medal=`${index+1}位`,cls="";
     if(index===0){medal="🥇";cls="top1"}
     if(index===1){medal="🥈";cls="top2"}
     if(index===2){medal="🥉";cls="top3"}
-
-    div.innerHTML=`
-      <div class="result-rank ${cls}">${medal} ${escapeHtml(choice)}</div>
-      <div>${score}点</div>
-    `;
+    div.innerHTML=`<div class="result-rank ${cls}">${medal} ${escapeHtml(choice)}</div><div>${score}点</div>`;
     box.appendChild(div);
   });
 }
 
 function renderPersonalResult(){
   const box=document.getElementById("personalResultBox");
-  box.innerHTML="<h3>👥 みんなの回答</h3>";
+  box.innerHTML="<h3>👥 個人回答</h3>";
+  if(currentTheme.showPersonal===false){
+    box.innerHTML+="<p class='small'>このお題では個人回答は非表示です</p>";
+    return;
+  }
 
   allVotes.forEach(vote=>{
     const div=document.createElement("div");
     div.className="rank-item";
-
     let html=`<strong>👤 ${escapeHtml(vote.player)}</strong>`;
-    vote.selections.forEach((choice,index)=>{
-      html+=`<p>${index+1}位：${escapeHtml(choice)}</p>`;
-    });
-
+    if(currentTheme.mode==="bestworst"){
+      html+=`<p>1番：${escapeHtml(vote.best.text)}</p><p>ビリ：${escapeHtml(vote.worst.text)}</p>`;
+    }else{
+      vote.selections.forEach((choice,index)=>html+=`<p>${index+1}位：${escapeHtml(choice.text)}</p>`);
+    }
     div.innerHTML=html;
     box.appendChild(div);
   });
@@ -619,40 +844,33 @@ function showResultTab(type){
 }
 
 function copyResult(){
-  let text=`【${currentTheme.title} 結果】\n\n`;
-
-  text+="■総合ランキング\n";
-  lastRanking.forEach(([choice,score],index)=>{
-    text+=`${index+1}位：${choice} ${score}点\n`;
-  });
-
-  text+="\n■みんなの回答\n";
+  let text=`【${currentTheme.title} 結果】\n\n■全体結果\n`;
+  lastRanking.forEach(([choice,score],index)=>text+=`${index+1}位：${choice} ${score}点\n`);
+  text+="\n■個人回答\n";
   allVotes.forEach(vote=>{
     text+=`\n${vote.player}\n`;
-    vote.selections.forEach((choice,index)=>{
-      text+=`${index+1}位：${choice}\n`;
-    });
+    if(currentTheme.mode==="bestworst"){
+      text+=`1番：${vote.best.text}\nビリ：${vote.worst.text}\n`;
+    }else{
+      vote.selections.forEach((choice,index)=>text+=`${index+1}位：${choice.text}\n`);
+    }
   });
-
-  navigator.clipboard.writeText(text)
-    .then(()=>alert("結果をコピーしたよ！"))
-    .catch(()=>alert("コピーできませんでした"));
+  navigator.clipboard.writeText(text).then(()=>alert("結果をコピーしたよ！")).catch(()=>alert("コピーできませんでした"));
 }
 
-/* レア演出：投票中の選択肢タップだけで抽選 */
+/* レア演出 */
 function runRareLottery(){
-  if(!isPageVisible("votePage"))return;
-
+  if(!isPageVisible("votePage")&&!isPageVisible("bestWorstPage"))return;
   const rareAllowed=currentTheme ? currentTheme.rareEnabled!==false : true;
   if(!rareAllowed)return;
 
-  if(Math.floor(Math.random()*16384)===0){
+  if(Math.floor(Math.random()*config.godRate)===0){
     showGodFreeze(lastActorName);
     return;
   }
 
   rareCountdown--;
-  localStorage.setItem("rareCountdown",String(rareCountdown));
+  localStorage.setItem("kuonRareCountdown",String(rareCountdown));
   updateLamp();
 
   if(rareCountdown<=0){
@@ -663,20 +881,19 @@ function runRareLottery(){
 }
 
 function resetRareCountdown(){
-  rareCountdown=Math.floor(Math.random()*100)+1;
-  localStorage.setItem("rareCountdown",String(rareCountdown));
+  const base=clamp(config.rareBase,10,9999);
+  const min=clamp(config.gogoMin,1,99);
+  const max=Math.max(min,clamp(config.gogoMax,1,99));
+  gogoLead=Math.floor(Math.random()*(max-min+1))+min;
+  rareCountdown=base+gogoLead;
+  localStorage.setItem("kuonRareCountdown",String(rareCountdown));
+  localStorage.setItem("kuonGogoLead",String(gogoLead));
 }
 
 function updateLamp(){
   const lamp=document.getElementById("lamp");
   const rareAllowed=currentTheme ? currentTheme.rareEnabled!==false : true;
-
-  if(
-    isPageVisible("votePage") &&
-    rareAllowed &&
-    rareCountdown>=1 &&
-    rareCountdown<=5
-  ){
+  if((isPageVisible("votePage")||isPageVisible("bestWorstPage")) && rareAllowed && rareCountdown>=1 && rareCountdown<=gogoLead){
     lamp.classList.remove("hidden");
   }else{
     lamp.classList.add("hidden");
@@ -703,27 +920,61 @@ function showGodFreeze(name){
   const overlay=document.createElement("div");
   overlay.className="freeze-overlay";
   document.body.appendChild(overlay);
-
   setTimeout(()=>{
     overlay.innerHTML=`
       <div>
-        <div class="freeze-text">
-          ${escapeHtml(name)}から<br>
-          飲んでください
-        </div>
+        <div class="freeze-text">${escapeHtml(name)}から<br>飲んでください</div>
         <button style="margin-top:30px" onclick="this.closest('.freeze-overlay').remove()">乾杯！</button>
       </div>
     `;
   },1500);
 }
 
-function escapeHtml(str){
-  return String(str)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+/* ルーレット */
+function openRoulette(){
+  makeRouletteInputs();
+  showPage("roulettePage");
+}
+
+function makeRouletteInputs(){
+  const count=clamp(document.getElementById("rouletteCount").value,2,6);
+  document.getElementById("rouletteCount").value=count;
+  const box=document.getElementById("rouletteInputs");
+  box.innerHTML="";
+  for(let i=0;i<count;i++){
+    const div=document.createElement("div");
+    div.className="rank-item";
+    div.innerHTML=`
+      <input class="rName" placeholder="${i+1}人目の名前" value="${["オイゲン","たろう","はなこ","じろう","まい","けん"][i]||""}">
+      <label class="small">メーター振り幅</label>
+      <input class="rWeight" type="number" min="1" max="100" value="10">
+    `;
+    box.appendChild(div);
+  }
+}
+
+let wheelRotation=0;
+function spinRoulette(){
+  const names=Array.from(document.querySelectorAll(".rName")).map(i=>i.value.trim()||"名無し");
+  const weights=Array.from(document.querySelectorAll(".rWeight")).map(i=>clamp(i.value,1,100));
+  const total=weights.reduce((a,b)=>a+b,0);
+  let r=Math.random()*total;
+  let winner=0;
+  for(let i=0;i<weights.length;i++){
+    r-=weights[i];
+    if(r<=0){winner=i;break}
+  }
+
+  const spins=clamp(document.getElementById("rouletteSpins").value,2,10);
+  document.getElementById("rouletteSpins").value=spins;
+  const wheel=document.getElementById("wheel");
+  const label=document.getElementById("wheelLabel");
+  const speed=Math.max(2.2,5.2-spins*.25);
+  wheel.style.transition=`transform ${speed}s cubic-bezier(.12,.82,.2,1)`;
+  wheelRotation+=360*spins+(360-(winner*(360/names.length)+180/names.length));
+  wheel.style.transform=`rotate(${wheelRotation}deg)`;
+  label.textContent="回転中...";
+  setTimeout(()=>{label.textContent=`🎯 ${names[winner]}`},speed*1000);
 }
 
 /* config */
@@ -731,137 +982,89 @@ function openConfig(){
   document.getElementById("configPasswordInput").value="";
   showPage("configLockPage");
 }
-
 function unlockConfig(){
   const pass=document.getElementById("configPasswordInput").value;
-  if(pass===config.pass1 || pass===config.pass2){
+  if(pass===config.pass1||pass===config.pass2){
     document.getElementById("pass1Input").value=config.pass1;
     document.getElementById("pass2Input").value=config.pass2;
+    document.getElementById("rareBaseInput").value=config.rareBase;
+    document.getElementById("gogoMinInput").value=config.gogoMin;
+    document.getElementById("gogoMaxInput").value=config.gogoMax;
+    document.getElementById("godRateInput").value=config.godRate;
     showPage("configPage");
-  }else{
-    alert("解除できません");
-  }
+  }else alert("解除できません");
 }
-
 function savePasswords(){
   const p1=document.getElementById("pass1Input").value.trim();
   const p2=document.getElementById("pass2Input").value.trim();
-
-  if(!p1 || !p2){
-    alert("パスワードは2つとも入力してね");
-    return;
-  }
-
-  config.pass1=p1;
-  config.pass2=p2;
+  if(!p1||!p2){alert("パスワードは2つとも入力してね");return}
+  config.pass1=p1;config.pass2=p2;saveConfig();alert("保存したよ");
+}
+function saveRareSettings(){
+  config.rareBase=clamp(document.getElementById("rareBaseInput").value,10,9999);
+  config.gogoMin=clamp(document.getElementById("gogoMinInput").value,1,99);
+  config.gogoMax=Math.max(config.gogoMin,clamp(document.getElementById("gogoMaxInput").value,1,99));
+  config.godRate=clamp(document.getElementById("godRateInput").value,100,999999);
   saveConfig();
-  alert("パスワードを保存したよ");
+  resetRareCountdown();
+  updateLamp();
+  alert("確率設定を保存したよ");
 }
 
 /* マインスイーパー */
-let mineSize=8;
-let mineCount=10;
-let mineCells=[];
-let mineGameOver=false;
-let pressTimer=null;
+let mineSize=8,mineCount=10,mineCells=[],mineGameOver=false,pressTimer=null;
 
-function openMinesweeper(){
-  startMine();
-  showPage("minePage");
-}
-
+function openMinesweeper(){startMine();showPage("minePage")}
 function startMine(){
-  mineGameOver=false;
-  mineCells=[];
-  const total=mineSize*mineSize;
-  const mines=new Set();
-
-  while(mines.size<mineCount){
-    mines.add(Math.floor(Math.random()*total));
-  }
-
-  for(let i=0;i<total;i++){
-    mineCells.push({mine:mines.has(i),open:false,flag:false,count:0});
-  }
-
-  for(let i=0;i<total;i++){
-    mineCells[i].count=countNearMines(i);
-  }
-
+  mineGameOver=false;mineCells=[];
+  const total=mineSize*mineSize,mines=new Set();
+  while(mines.size<mineCount)mines.add(Math.floor(Math.random()*total));
+  for(let i=0;i<total;i++)mineCells.push({mine:mines.has(i),open:false,flag:false,count:0});
+  for(let i=0;i<total;i++)mineCells[i].count=countNearMines(i);
   document.getElementById("mineInfo").textContent=`爆弾：${mineCount}個`;
   renderMine();
 }
-
-function countNearMines(index){
-  const neighbors=getNeighbors(index);
-  return neighbors.filter(i=>mineCells[i] && mineCells[i].mine).length;
-}
-
+function countNearMines(index){return getNeighbors(index).filter(i=>mineCells[i]&&mineCells[i].mine).length}
 function getNeighbors(index){
-  const x=index%mineSize;
-  const y=Math.floor(index/mineSize);
-  const list=[];
-
-  for(let dy=-1;dy<=1;dy++){
-    for(let dx=-1;dx<=1;dx++){
-      if(dx===0 && dy===0)continue;
-      const nx=x+dx;
-      const ny=y+dy;
-      if(nx>=0 && nx<mineSize && ny>=0 && ny<mineSize){
-        list.push(ny*mineSize+nx);
-      }
-    }
+  const x=index%mineSize,y=Math.floor(index/mineSize),list=[];
+  for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
+    if(dx===0&&dy===0)continue;
+    const nx=x+dx,ny=y+dy;
+    if(nx>=0&&nx<mineSize&&ny>=0&&ny<mineSize)list.push(ny*mineSize+nx);
   }
   return list;
 }
-
 function renderMine(){
   const board=document.getElementById("mineBoard");
   board.innerHTML="";
   board.style.gridTemplateColumns=`repeat(${mineSize},34px)`;
-
   mineCells.forEach((cell,index)=>{
     const btn=document.createElement("button");
     btn.className="cell";
-
     if(cell.open){
       btn.classList.add("open");
-      if(cell.mine){
-        btn.classList.add("mine");
-        btn.textContent="💣";
-      }else{
-        btn.textContent=cell.count>0 ? cell.count : "";
-      }
-    }else if(cell.flag){
-      btn.classList.add("flag");
-      btn.textContent="🚩";
-    }
-
+      if(cell.mine){btn.classList.add("mine");btn.textContent="💣"}
+      else btn.textContent=cell.count>0?cell.count:"";
+    }else if(cell.flag){btn.classList.add("flag");btn.textContent="🚩"}
     btn.onmousedown=()=>pressTimer=setTimeout(()=>toggleFlag(index),500);
     btn.onmouseup=()=>clearTimeout(pressTimer);
     btn.onmouseleave=()=>clearTimeout(pressTimer);
     btn.ontouchstart=()=>{pressTimer=setTimeout(()=>toggleFlag(index),500)};
     btn.ontouchend=()=>{clearTimeout(pressTimer)};
     btn.onclick=()=>openCell(index);
-
     board.appendChild(btn);
   });
 }
-
 function toggleFlag(index){
-  if(mineGameOver || mineCells[index].open)return;
+  if(mineGameOver||mineCells[index].open)return;
   mineCells[index].flag=!mineCells[index].flag;
   renderMine();
 }
-
 function openCell(index){
   if(mineGameOver)return;
-
   const cell=mineCells[index];
-  if(cell.open || cell.flag)return;
-
+  if(cell.open||cell.flag)return;
   cell.open=true;
-
   if(cell.mine){
     mineGameOver=true;
     mineCells.forEach(c=>{if(c.mine)c.open=true});
@@ -869,27 +1072,20 @@ function openCell(index){
     setTimeout(()=>alert("ゲームオーバー！"),100);
     return;
   }
-
-  if(cell.count===0){
-    getNeighbors(index).forEach(i=>{
-      if(!mineCells[i].open && !mineCells[i].flag)openCell(i);
-    });
-  }
-
+  if(cell.count===0)getNeighbors(index).forEach(i=>{if(!mineCells[i].open&&!mineCells[i].flag)openCell(i)});
   renderMine();
   checkMineClear();
 }
-
 function checkMineClear(){
-  const safeCells=mineCells.filter(c=>!c.mine);
-  if(safeCells.every(c=>c.open)){
+  if(mineCells.filter(c=>!c.mine).every(c=>c.open)){
     mineGameOver=true;
     setTimeout(()=>alert("クリア！"),100);
   }
 }
 
-initChoices();
+initChoices(5);
 initScores();
+makeRouletteInputs();
 updateLamp();
 </script>
 </body>
