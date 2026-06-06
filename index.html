@@ -1183,17 +1183,24 @@ function buildRankingResult(){
   });
 
   allVotes.forEach(vote=>{
+    if(currentTheme.mode==="second"){
+      const secondChoice=vote.selections[1];
+      if(secondChoice && map[secondChoice.text]){
+        map[secondChoice.text].score+=1;
+      }
+      return;
+    }
+
     vote.selections.forEach((choice,index)=>{
       if(!map[choice.text])return;
-      if(currentTheme.mode==="second"){
-        map[choice.text].score+=(index===1?5:0);
-      }else{
-        map[choice.text].score+=(currentTheme.scores||defaultScores)[index]??0;
-      }
+      map[choice.text].score+=(currentTheme.scores||defaultScores)[index]??0;
     });
   });
 
-  resultItems=Object.values(map).sort((a,b)=>b.score-a.score);
+  resultItems=Object.values(map).sort((a,b)=>{
+    if(b.score!==a.score)return b.score-a.score;
+    return a.text.localeCompare(b.text,"ja");
+  });
   lastRanking=resultItems.map(i=>[i.text,i.score]);
 }
 
@@ -1220,6 +1227,13 @@ function buildBestWorstResult(){
 
 function getDisplayItems(){
   const items=[...resultItems];
+
+  // 「2番目を決める」だけは専用の見せ方にする。
+  // リザルト表示設定に関係なく、みんなが2位だと思った集計を1位〜5位で表示。
+  if(currentTheme.mode==="second"){
+    return items.slice(0,5);
+  }
+
   if(currentTheme.resultMode==="top1") return items.slice(0,1);
   if(currentTheme.resultMode==="top3") return items.slice(0,3);
   if(currentTheme.resultMode==="topBottom"){
@@ -1230,6 +1244,13 @@ function getDisplayItems(){
 }
 
 function resultTitle(item,realIndex,displayIndex){
+  if(currentTheme.mode==="second"){
+    if(displayIndex===0)return `🥇 1位 ${escapeHtml(item.text)}`;
+    if(displayIndex===1)return `🥈 2位 ${escapeHtml(item.text)}`;
+    if(displayIndex===2)return `🥉 3位 ${escapeHtml(item.text)}`;
+    return `${displayIndex+1}位 ${escapeHtml(item.text)}`;
+  }
+
   if(currentTheme.resultMode==="topBottom" && displayIndex===1){
     return `💀 ビリ ${escapeHtml(item.text)}`;
   }
@@ -1271,7 +1292,9 @@ function renderOwner(item,idx){
 
 function renderTotalResult(){
   const box=document.getElementById("totalResultBox");
-  box.innerHTML="<h3>🏆 全体結果</h3>";
+  box.innerHTML=currentTheme.mode==="second"
+    ? "<h3>🎖️ みんなが思う2位ランキング</h3><p class='small'>投票者が「2位」として選んだ回数のランキングです</p>"
+    : "<h3>🏆 全体結果</h3>";
 
   if(currentTheme.showTotal===false){
     box.innerHTML+="<p class='small'>このお題では全体結果は非表示です</p>";
@@ -1282,9 +1305,10 @@ function renderTotalResult(){
     const realIndex=resultItems.indexOf(item);
     const div=document.createElement("div");
     div.className="rank-item";
+    const unit=currentTheme.mode==="second" ? "票" : "点";
     div.innerHTML=`
       <div class="result-rank">${resultTitle(item,realIndex,displayIndex)}</div>
-      <div>${item.score}点</div>
+      <div>${item.score}${unit}</div>
       ${renderOwner(item,realIndex)}
     `;
     box.appendChild(div);
@@ -1293,7 +1317,9 @@ function renderTotalResult(){
 
 function renderPersonalResult(){
   const box=document.getElementById("personalResultBox");
-  box.innerHTML="<h3>👥 個人回答</h3>";
+  box.innerHTML=currentTheme.mode==="second"
+    ? "<h3>👥 それぞれが2位に選んだもの</h3>"
+    : "<h3>👥 個人回答</h3>";
 
   if(currentTheme.showPersonal===false){
     box.innerHTML+="<p class='small'>このお題では個人回答は非表示です</p>";
@@ -1307,6 +1333,9 @@ function renderPersonalResult(){
 
     if(currentTheme.mode==="bestworst"){
       html+=`<p>1番：${escapeHtml(vote.best.text)}</p><p>ビリ：${escapeHtml(vote.worst.text)}</p>`;
+    }else if(currentTheme.mode==="second"){
+      const secondChoice=vote.selections[1];
+      html+=`<p>2位に選んだ：${secondChoice ? escapeHtml(secondChoice.text) : "未選択"}</p>`;
     }else{
       vote.selections.forEach((choice,index)=>{
         html+=`<p>${index+1}位：${escapeHtml(choice.text)}</p>`;
@@ -1324,20 +1353,25 @@ function showResultTab(type){
 }
 
 function copyResult(){
-  let text=`【${currentTheme.title} 結果】\n\n■全体結果\n`;
+  let text=`【${currentTheme.title} 結果】\n\n`;
+  text+=currentTheme.mode==="second" ? "■みんなが思う2位ランキング\n" : "■全体結果\n";
 
   getDisplayItems().forEach((item,index)=>{
-    text+=`${index+1}：${item.text} ${item.score}点`;
+    const unit=currentTheme.mode==="second" ? "票" : "点";
+    text+=`${index+1}位：${item.text} ${item.score}${unit}`;
     if(item.owner && currentTheme.ownerRevealMode==="show") text+=` / 回答者：${item.owner}`;
     text+="\n";
   });
 
-  text+="\n■個人回答\n";
+  text+=currentTheme.mode==="second" ? "\n■それぞれが2位に選んだもの\n" : "\n■個人回答\n";
 
   allVotes.forEach(vote=>{
     text+=`\n${vote.player}\n`;
     if(currentTheme.mode==="bestworst"){
       text+=`1番：${vote.best.text}\nビリ：${vote.worst.text}\n`;
+    }else if(currentTheme.mode==="second"){
+      const secondChoice=vote.selections[1];
+      text+=`2位に選んだ：${secondChoice ? secondChoice.text : "未選択"}\n`;
     }else{
       vote.selections.forEach((choice,index)=>{
         text+=`${index+1}位：${choice.text}\n`;
