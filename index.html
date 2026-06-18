@@ -263,6 +263,31 @@ textarea{
   padding:10px;
   margin-top:10px;
 }
+
+.confirm-overlay{
+  position:fixed;
+  inset:0;
+  z-index:12000;
+  background:rgba(0,0,0,.62);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:22px;
+}
+.confirm-box{
+  width:100%;
+  max-width:340px;
+  background:#fff;
+  border-radius:24px;
+  padding:18px;
+  text-align:center;
+  box-shadow:0 14px 40px rgba(0,0,0,.28);
+}
+.confirm-box h3{margin-top:0}
+.confirm-actions{display:flex;gap:10px}
+.confirm-actions button{flex:1}
+button{transition:transform .05s ease, opacity .05s ease}
+button.is-tapping{transform:scale(.96);opacity:.88}
 </style>
 </head>
 <body>
@@ -287,11 +312,19 @@ textarea{
     <div class="rank-item"><strong>4. 匿名モード</strong><p>回答順はランダム表示。匿名公開、完全匿名、匿名推理モードを選べます。</p></div>
     <div class="rank-item"><strong>5. 結果発表</strong><p>全部表示、1位だけ、1位とビリだけ、1位〜3位だけを選べます。</p></div>
     <div class="rank-item"><strong>6. おまけ</strong><p>タイトルタップでマインスイーパー。ルーレット、GOGO CHANCE、SUPER RARE、GOD風演出もあります。</p></div>
-    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+    <button class="gray" onclick="safeGoTop()">トップに戻る</button>
   </div>
 
   <div id="historyPage" class="card hidden">
     <h2>📜 Update History</h2>
+    <div class="rank-item">
+      <strong>Version 1.1.2</strong>
+      <p>・2位モード結果を「みんなが思う2位ランキング」に改善</p>
+      <p>・投票中の戻る操作を強化</p>
+      <p>・トップへ戻る確認画面を追加</p>
+      <p>・タップレスポンスを向上</p>
+      <p>・連打による二重選択を防止</p>
+    </div>
     <div class="rank-item">
       <strong>Version 1.1</strong>
       <p>・回答者と投票者を分離できる機能を追加</p>
@@ -318,7 +351,7 @@ textarea{
       <p>・Config機能</p>
       <p>・マインスイーパー</p>
     </div>
-    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+    <button class="gray" onclick="safeGoTop()">トップに戻る</button>
   </div>
 
   <div id="createPage" class="card hidden">
@@ -383,13 +416,13 @@ textarea{
     <label class="checkrow"><input type="checkbox" id="themeRareEnabled" checked> このお題でレア演出を有効にする</label>
 
     <button onclick="saveTheme()">保存する</button>
-    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+    <button class="gray" onclick="safeGoTop()">トップに戻る</button>
   </div>
 
   <div id="themeListPage" class="card hidden">
     <h2>📚 保存したお題</h2>
     <div id="themeList"></div>
-    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+    <button class="gray" onclick="safeGoTop()">トップに戻る</button>
   </div>
 
   <div id="startPage" class="card hidden">
@@ -398,7 +431,7 @@ textarea{
     <select id="themeSelect" onchange="renderParticipantSetup()"></select>
     <div id="participantSetup"></div>
     <button onclick="startGame()">スタート</button>
-    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+    <button class="gray" onclick="safeGoTop()">トップに戻る</button>
   </div>
 
   <div id="answerInputPage" class="card hidden">
@@ -445,7 +478,7 @@ textarea{
     <div id="personalResultBox" class="hidden"></div>
     <button onclick="copyResult()">結果をコピー</button>
     <button class="sub" onclick="openStartPage()">もう一度遊ぶ</button>
-    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+    <button class="gray" onclick="safeGoTop()">トップに戻る</button>
   </div>
 
   <div id="roulettePage" class="card hidden">
@@ -463,7 +496,7 @@ textarea{
       </div>
     </div>
     <button onclick="spinRoulette()">回す</button>
-    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+    <button class="gray" onclick="safeGoTop()">トップに戻る</button>
   </div>
 
   <div id="minePage" class="card hidden">
@@ -472,14 +505,14 @@ textarea{
     <p class="small" id="mineInfo"></p>
     <div id="mineBoard" class="mine-board"></div>
     <button class="sub" onclick="startMine()">リスタート</button>
-    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+    <button class="gray" onclick="safeGoTop()">トップに戻る</button>
   </div>
 
   <div id="configLockPage" class="card hidden">
     <h2>⚙️ config</h2>
     <input id="configPasswordInput" type="password" placeholder="password">
     <button onclick="unlockConfig()">解除</button>
-    <button class="gray" onclick="showPage('topPage')">戻る</button>
+    <button class="gray" onclick="safeGoTop()">戻る</button>
   </div>
 
   <div id="configPage" class="card hidden">
@@ -504,11 +537,11 @@ textarea{
     <input id="pass1Input" placeholder="パスワード1">
     <input id="pass2Input" placeholder="パスワード2">
     <button onclick="savePasswords()">パスワードを保存</button>
-    <button class="gray" onclick="showPage('topPage')">トップに戻る</button>
+    <button class="gray" onclick="safeGoTop()">トップに戻る</button>
   </div>
 </div>
 
-<div id="versionBadge" class="version-badge hidden" onclick="showPage('historyPage')">KUON GAME<br>v1.1</div>
+<div id="versionBadge" class="version-badge hidden" onclick="showPage('historyPage')">KUON GAME<br>v1.1.2</div>
 <div id="lamp" class="hidden"><img src="gogo_chance.png" alt="GOGO CHANCE"></div>
 
 <script>
@@ -544,6 +577,30 @@ let wheelRotation=0;
 let rareCountdown=Number(localStorage.getItem("kuonRareCountdown")||"0");
 let gogoLead=Number(localStorage.getItem("kuonGogoLead")||"0");
 const defaultScores=[5,3,1,0,-1];
+let tapBusy=false;
+
+function guardTap(fn,button=null,delay=180){
+  if(tapBusy)return;
+  tapBusy=true;
+
+  if(button){
+    button.classList.add("is-tapping");
+    button.disabled=true;
+  }
+
+  requestAnimationFrame(()=>{
+    try{fn();}
+    finally{
+      setTimeout(()=>{
+        tapBusy=false;
+        if(button){
+          button.classList.remove("is-tapping");
+          button.disabled=false;
+        }
+      },delay);
+    }
+  });
+}
 
 if(!rareCountdown||rareCountdown<1) resetRareCountdown();
 
@@ -573,6 +630,63 @@ function isPageVisible(id){
   const el=document.getElementById(id);
   return el && !el.classList.contains("hidden");
 }
+function currentPageId(){
+  const ids=[
+    "topPage","guidePage","historyPage","createPage","themeListPage","startPage",
+    "answerInputPage","votePage","bestWorstPage","handoffPage","resultPage",
+    "roulettePage","minePage","configLockPage","configPage"
+  ];
+  return ids.find(id=>isPageVisible(id))||"topPage";
+}
+
+function showConfirm(message,onYes){
+  const old=document.getElementById("confirmOverlay");
+  if(old) old.remove();
+
+  const overlay=document.createElement("div");
+  overlay.id="confirmOverlay";
+  overlay.className="confirm-overlay";
+  overlay.innerHTML=`
+    <div class="confirm-box">
+      <h3>確認</h3>
+      <p>${escapeHtml(message).replaceAll("\n","<br>")}</p>
+      <div class="confirm-actions">
+        <button class="gray" id="confirmNo">いいえ</button>
+        <button class="danger" id="confirmYes">はい</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  document.getElementById("confirmNo").onclick=()=>overlay.remove();
+  document.getElementById("confirmYes").onclick=()=>{
+    overlay.remove();
+    onYes();
+  };
+}
+
+function safeGoTop(){
+  const page=currentPageId();
+
+  if(page==="topPage") return;
+
+  let message="トップ画面へ戻りますか？";
+
+  if(page==="votePage"||page==="bestWorstPage"||page==="handoffPage"){
+    message="投票中ですがトップ画面へ戻りますか？\n進行中の投票データは失われます。";
+  }else if(page==="answerInputPage"){
+    message="回答入力中ですがトップ画面へ戻りますか？\n入力中の内容は失われます。";
+  }else if(page==="resultPage"){
+    message="結果発表を終了してトップ画面へ戻りますか？";
+  }else if(page==="createPage"){
+    message="お題作成中ですがトップ画面へ戻りますか？\n未保存の内容は失われます。";
+  }else if(page==="roulettePage"||page==="minePage"){
+    message="ゲームを終了してトップ画面へ戻りますか？";
+  }
+
+  showConfirm(message,()=>showPage("topPage"));
+}
+
 
 function saveStorage(){
   localStorage.setItem("kuonThemes",JSON.stringify(themes));
@@ -1036,7 +1150,7 @@ function renderVote(){
     const btn=document.createElement("button");
     btn.className="choice-btn";
     btn.textContent=getChoiceLabel(choice);
-    btn.onclick=()=>selectChoice(choice.id);
+    btn.onclick=()=>guardTap(()=>selectChoice(choice.id),btn);
     choiceBox.appendChild(btn);
   });
 
@@ -1121,7 +1235,7 @@ function renderBestWorst(){
     const btn=document.createElement("button");
     btn.className="choice-btn";
     btn.textContent=getChoiceLabel(ans);
-    btn.onclick=()=>selectBestWorst(ans.id);
+    btn.onclick=()=>guardTap(()=>selectBestWorst(ans.id),btn);
     box.appendChild(btn);
   });
 }
